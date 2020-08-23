@@ -9,7 +9,7 @@ def run(searches):
 					found = True
 
 		if not found:
-			freqDict.append({'search': search.search, 'times': 1})
+			freqDict.append({"search": search.search, "times": 1})
 
 	freqDict = sorted(freqDict, key=lambda x: x['times'], reverse=True)
 

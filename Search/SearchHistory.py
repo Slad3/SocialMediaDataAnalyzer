@@ -22,7 +22,7 @@ class SearchHistory(object):
 
 	def run(self) -> dict:
 		result = {}
-		result['Frequency'] = Frequency.run(self.searches)
+		result["Frequency"] = Frequency.run(self.searches)
 
 		return result
 
