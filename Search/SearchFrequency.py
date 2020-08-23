@@ -1,5 +1,5 @@
 
-def run(searches):
+def run(searches) -> []:
 	freqDict = []
 	for search in searches:
 		found = False

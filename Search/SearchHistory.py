@@ -1,6 +1,7 @@
 import json
 from Search.SearchResult import SearchResult
 import Search.SearchFrequency as Frequency
+import Search.SearchDateHistogram as Histogram
 
 class SearchHistory(object):
 
@@ -23,6 +24,6 @@ class SearchHistory(object):
 	def run(self) -> dict:
 		result = {}
 		result["Frequency"] = Frequency.run(self.searches)
-
+		result["DateHistogram"] = Histogram.run(self.searches)
 		return result
 

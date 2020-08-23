@@ -5,10 +5,6 @@ import json
 import io
 import zipfile
 
-
-
-
-
 from Search.SearchHistory import SearchHistory
 import Search.SearchFrequency as SearchFrequency
 
