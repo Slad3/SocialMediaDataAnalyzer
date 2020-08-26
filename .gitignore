@@ -1,5 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
 
 .idea
+!/static
 
 main.py
+/static/example.json

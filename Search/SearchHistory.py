@@ -1,5 +1,5 @@
 import json
-from Search.SearchResult import SearchResult
+from Search.SearchStructures import SearchResult
 import Search.SearchFrequency as Frequency
 import Search.SearchDateHistogram as Histogram
 
