@@ -27,6 +27,12 @@ class Message(object):
 		elif 'files' in input:
 			self.typeofMessage = 'files'
 
+		print(self.toString())
+
+
+	def toString(self) -> str:
+		return str(self.time.date()) + "\t" + str(self.time.time())[0: 8] + " \t" + self.sender + "\t" + self.typeofMessage
+
 
 
 
@@ -52,3 +58,12 @@ class MessageThread(object):
 	# Returning true if
 	def filter(self) -> bool:
 		return False
+
+
+
+
+class GroupThread(MessageThread):
+	people = []
+
+	def __init__(self, direct):
+		super(direct)
