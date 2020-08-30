@@ -24,6 +24,6 @@ class SearchHistory(object):
 	def run(self) -> dict:
 		result = {}
 		result["Frequency"] = Frequency.run(self.searches)
-		result["DateHistogram"] = Histogram.run(self.searches)
+		result["DateHistogram"] = Histogram.run(self.searches, result["Frequency"][0:2])
 		return result
 
