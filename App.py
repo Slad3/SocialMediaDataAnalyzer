@@ -45,6 +45,11 @@ def upload():
 		searchHistory = SearchHistory(str(tempDirectory.name + "\search_history\your_search_history.json"))
 
 		result["SearchHistory"] = searchHistory.run()
+
+
+
+
+		# Returning and finishing up
 		tempDirectory.cleanup()
 		print("Finished")
 		return jsonify(result)
