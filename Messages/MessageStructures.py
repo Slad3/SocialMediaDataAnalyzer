@@ -81,23 +81,24 @@ class MessageThread(object):
 				if message.sender == person:
 					if self.messages[iter+1].sender != person:
 						difference = message.timestamp - self.messages[iter+1].timestamp
+						replyTimeChart = np.append(replyTimeChart, float(str(difference)[0: 7]))
 						if difference < maxTime:
 							totalTime += difference
-							replyTimeChart = np.append(replyTimeChart, difference)
+							# replyTimeChart = np.append(replyTimeChart, float(str(difference)[0: 7]))
 						else:
 							totalTime += maxTime
-							replyTimeChart = np.append(replyTimeChart, maxTime)
+							# replyTimeChart = np.append(replyTimeChart, maxTime)
 						numberOfMessages += 1
 						# print(self.messages[iter+1].sender, '\t', message.sender, '\t', message.content)
 						# print(self.messages[iter+1].timestamp, "\t\t", message.timestamp, '\t', difference, '\t')
 
 			print('\n=======')
-			print(person)
-			print(totalTime)
-			print(timedelta(totalTime))
-			print(numberOfMessages)
-			print(totalTime/numberOfMessages)
-			print(timedelta(seconds= totalTime/numberOfMessages))
+			# print(person)
+			# print(totalTime)
+			# print(timedelta(totalTime))
+			# print(numberOfMessages)
+			# print(totalTime/numberOfMessages)
+			# print(timedelta(seconds= totalTime/numberOfMessages))
 
 			endCalculations.append(replyTimeChart)
 
