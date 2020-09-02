@@ -16,7 +16,7 @@ You can download your Facebook user data here:
 #### The end goal of each analysis is to provide a json format that can be easily readable by a frontend service, whether that's the website frontend or 
 
 ### Searches
- ####The end result of analyzing the searches will be a JSON format of getting the frequency of each search, and providing a comprehensive histogram of each search.
+ #### The end result of analyzing the searches will be a JSON format of getting the frequency of each search, and providing a comprehensive histogram of each search.
 
 ### Messages
    #### ** No or content of the user messages will be collected, analyzed, or stored. That's creepy. Only what type of message (text, photo, video etc.), sender, and time will be analyzed. **
