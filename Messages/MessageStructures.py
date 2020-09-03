@@ -1,5 +1,6 @@
 import json
 from datetime import datetime, timedelta
+import pandas as pd
 import numpy as np
 
 class Message(object):
@@ -101,6 +102,12 @@ class MessageThread(object):
 			# print(timedelta(seconds= totalTime/numberOfMessages))
 
 			endCalculations.append(replyTimeChart)
+
+			replyTimeChart.sort()
+			print(np.quantile(replyTimeChart, .25))
+			print(np.quantile(replyTimeChart, .75))
+
+			print(pd.Series(replyTimeChart).quantile([.25, .5, .75]))
 
 		return endCalculations
 
