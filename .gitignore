@@ -4,4 +4,5 @@
 !/static
 
 main.py
+*.ipyb
 /static/example.json
