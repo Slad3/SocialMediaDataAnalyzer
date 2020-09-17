@@ -67,9 +67,21 @@ class MessageThread(object):
 				for message in self.rawMessage['messages']:
 					self.messages.append(Message(message))
 
+			self.messages.reverse()
+
+
 
 	def calc(self) -> []:
 		endCalculations = []
+
+		allMessages = np.array([])
+		for iter, message in enumerate(self.messages[:-1]):
+			difference = message.timestamp - self.messages[iter+1].timestamp
+			allMessages = np.append(allMessages, float(str(difference)[0: 7]))
+
+
+
+
 		for person in self.participants:
 
 			numberOfMessages = 0
@@ -78,36 +90,41 @@ class MessageThread(object):
 
 			maxTime = 14400
 
-			for iter, message in enumerate(self.messages[:-1]):
-				if message.sender == person:
-					if self.messages[iter+1].sender != person:
-						difference = message.timestamp - self.messages[iter+1].timestamp
-						replyTimeChart = np.append(replyTimeChart, float(str(difference)[0: 7]))
+			for iter, message in enumerate(self.messages[1:]):
+
+				if message.sender == person and self.messages[iter-1].sender != person:
+					difference = message.timestamp - self.messages[iter-1].timestamp
+					if difference > 0:
+						replyTimeChart = np.append(replyTimeChart, float(str(difference)[0: 7])) # adding
+						numberOfMessages += 1
 						if difference < maxTime:
 							totalTime += difference
 							# replyTimeChart = np.append(replyTimeChart, float(str(difference)[0: 7]))
 						else:
 							totalTime += maxTime
 							# replyTimeChart = np.append(replyTimeChart, maxTime)
-						numberOfMessages += 1
-						# print(self.messages[iter+1].sender, '\t', message.sender, '\t', message.content)
-						# print(self.messages[iter+1].timestamp, "\t\t", message.timestamp, '\t', difference, '\t')
 
-			print('\n=======')
-			# print(person)
-			# print(totalTime)
-			# print(timedelta(totalTime))
-			# print(numberOfMessages)
-			# print(totalTime/numberOfMessages)
-			# print(timedelta(seconds= totalTime/numberOfMessages))
+						# print(person, "\t", message.sender)
+						# print(self.messages[iter-1].sender, '\t', message.sender, '\t', message.content)
+						# print(self.messages[iter-1].timestamp, "\t\t", message.timestamp, '\t', difference, '\t')
+					else:
+						print(iter, "\tnegative\t", message.toString())
 
 			endCalculations.append(replyTimeChart)
 
-			replyTimeChart.sort()
-			print(np.quantile(replyTimeChart, .25))
-			print(np.quantile(replyTimeChart, .75))
+			print('\n=======================')
+			print(person)
+			print("Total time:\t", totalTime)
+			print("Total time delta:\t", timedelta(totalTime))
+			print("Number of messages:\t", numberOfMessages)
+			print(totalTime/numberOfMessages)
+			print(timedelta(seconds= totalTime/numberOfMessages))
 
-			print(pd.Series(replyTimeChart).quantile([.25, .5, .75]))
+
+
+
+
+
 
 		return endCalculations
 
