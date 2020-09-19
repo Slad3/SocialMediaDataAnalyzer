@@ -6,3 +6,4 @@
 main.py
 *.ipyb
 /static/example.json
+/main.ipynb

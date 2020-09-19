@@ -24,5 +24,11 @@ You can download your Facebook user data here:
      
    #### This includes how fast each of you respond, the ability to keep a conversation going, if the relationship between you and the recipiant is one sided, who usually initiates the conversation, etc. This also includes the grouping of messages to find somewhat of conversations. 
 
+    - Response Times
+    - Amount of double messaging
+    - Most initiations of conversations
+    - Least self initiations conversations
+    
+    
 ## Technical
  #### All compilable code is written in python. Server is written with Flask/Flask-Cors and analysis utilizes NumPy, Pandas, and Scikit-learn.

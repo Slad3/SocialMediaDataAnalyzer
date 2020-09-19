@@ -74,59 +74,79 @@ class MessageThread(object):
 	def calc(self) -> []:
 		endCalculations = []
 
+		returnDictionary = {"receiver": self.participants[0], 'averageResponse': []}
+
 		allMessages = np.array([])
 		for iter, message in enumerate(self.messages[:-1]):
 			difference = message.timestamp - self.messages[iter+1].timestamp
 			allMessages = np.append(allMessages, float(str(difference)[0: 7]))
 
 
-
-
 		for person in self.participants:
 
-			numberOfMessages = 0
+			#
+			# Reply time calculations
+			#
 			replyTimeChart = np.array([])
-			totalTime = 0
-
 			maxTime = 14400
 
 			for iter, message in enumerate(self.messages[1:]):
 
-				if message.sender == person and self.messages[iter-1].sender != person:
+				if message.sender == person and self.messages[iter-1].sender != person and iter is not 0:
 					difference = message.timestamp - self.messages[iter-1].timestamp
 					if difference > 0:
-						replyTimeChart = np.append(replyTimeChart, float(str(difference)[0: 7])) # adding
-						numberOfMessages += 1
+
 						if difference < maxTime:
-							totalTime += difference
+							replyTimeChart = np.append(replyTimeChart, difference) # adding
 							# replyTimeChart = np.append(replyTimeChart, float(str(difference)[0: 7]))
 						else:
-							totalTime += maxTime
-							# replyTimeChart = np.append(replyTimeChart, maxTime)
+							replyTimeChart = np.append(replyTimeChart, maxTime) # adding
 
 						# print(person, "\t", message.sender)
 						# print(self.messages[iter-1].sender, '\t', message.sender, '\t', message.content)
 						# print(self.messages[iter-1].timestamp, "\t\t", message.timestamp, '\t', difference, '\t')
 					else:
-						print(iter, "\tnegative\t", message.toString())
+						print(iter, "\tnegative\t", message.toString(), "\t", message.content)
 
 			endCalculations.append(replyTimeChart)
 
+			numberOfMessages = len(replyTimeChart)
+			total = replyTimeChart.sum()
+
 			print('\n=======================')
 			print(person)
-			print("Total time:\t", totalTime)
-			print("Total time delta:\t", timedelta(totalTime))
+			print("Total time:\t", total)
+			print("Total time delta:\t", timedelta(total))
 			print("Number of messages:\t", numberOfMessages)
-			print(totalTime/numberOfMessages)
-			print(timedelta(seconds= totalTime/numberOfMessages))
+			print("Average Response:\t", total/numberOfMessages)
+			print(timedelta(seconds= total/numberOfMessages))
+
+			returnDictionary['averageResponse'].append({'person': person, 'response': timedelta(seconds= total/numberOfMessages)})
+
+
+			#
+			# Calculating double messaging
+			#
+			doubleMessage = 0
+			for iter, message in enumerate(self.messages[: -1]):
+				currentMessage = self.messages[iter].sender
+				nextMessage = self.messages[iter +1].sender
+				if currentMessage == person and nextMessage == person:
+					doubleMessage += 1
+
+			returnDictionary['doubleMessage'].append({'person': person, 'times': doubleMessage})
 
 
 
+			#
+			# Calcuating who for most and least initiated conversations
+			#
+			initiations = 0
 
 
+			returnDictionary['initiations'].append({'person': person, 'times': initiations})
 
-
-		return endCalculations
+		return returnDictionary
 
 
 
