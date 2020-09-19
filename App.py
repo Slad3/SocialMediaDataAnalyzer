@@ -45,7 +45,7 @@ def upload():
 		searchHistory = SearchHistory(str(tempDirectory.name + "\search_history\your_search_history.json"))
 
 		result["SearchHistory"] = searchHistory.run()
-
+		result['MessageData'] = MessageStructures
 
 
 

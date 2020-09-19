@@ -74,7 +74,7 @@ class MessageThread(object):
 	def calc(self) -> []:
 		endCalculations = []
 
-		returnDictionary = {"receiver": self.participants[0], 'averageResponse': []}
+		returnDictionary = {"receiver": self.participants[0], 'averageResponse': [], 'doubleMessage': [], 'initiations': []}
 
 		allMessages = np.array([])
 		for iter, message in enumerate(self.messages[:-1]):
@@ -134,6 +134,7 @@ class MessageThread(object):
 				if currentMessage == person and nextMessage == person:
 					doubleMessage += 1
 
+			print(doubleMessage)
 			returnDictionary['doubleMessage'].append({'person': person, 'times': doubleMessage})
 
 
