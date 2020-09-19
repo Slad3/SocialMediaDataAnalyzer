@@ -56,12 +56,14 @@ class MessageThread(object):
 
 	def __init__(self, direct, name=None):
 		self.directory = direct
+		print(direct)
 
 		with open(self.directory + "\\message_1.json", 'r') as inputFile:
 			self.rawMessage = json.load(inputFile)
 
 			for name in self.rawMessage['participants']:
 				self.participants.append(name['name'])
+				print(name)
 
 			if self.rawMessage['messages']:
 				for message in self.rawMessage['messages']:
@@ -72,6 +74,7 @@ class MessageThread(object):
 
 
 	def calc(self) -> []:
+		print(self.participants)
 		endCalculations = []
 
 		returnDictionary = {"receiver": self.participants[0], 'averageResponse': [], 'doubleMessage': [], 'initiations': []}
@@ -106,22 +109,25 @@ class MessageThread(object):
 						# print(self.messages[iter-1].sender, '\t', message.sender, '\t', message.content)
 						# print(self.messages[iter-1].timestamp, "\t\t", message.timestamp, '\t', difference, '\t')
 					else:
-						print(iter, "\tnegative\t", message.toString(), "\t", message.content)
+						# print(iter, "\tnegative\t", message.toString(), "\t", message.content)
+						pass
 
 			endCalculations.append(replyTimeChart)
 
 			numberOfMessages = len(replyTimeChart)
 			total = replyTimeChart.sum()
 
-			print('\n=======================')
-			print(person)
-			print("Total time:\t", total)
-			print("Total time delta:\t", timedelta(total))
-			print("Number of messages:\t", numberOfMessages)
-			print("Average Response:\t", total/numberOfMessages)
-			print(timedelta(seconds= total/numberOfMessages))
+			if numberOfMessages > 0:
 
-			returnDictionary['averageResponse'].append({'person': person, 'response': timedelta(seconds= total/numberOfMessages)})
+				# print('\n=======================')
+				# print(person)
+				# print("Total time:\t", total)
+				# print("Total time delta:\t", timedelta(total))
+				# print("Number of messages:\t", numberOfMessages)
+				# print("Average Response:\t", total/numberOfMessages)
+				# print(timedelta(seconds= total/numberOfMessages))
+
+				returnDictionary['averageResponse'].append({'person': person, 'response': timedelta(seconds= total/numberOfMessages)})
 
 
 			#
@@ -134,7 +140,7 @@ class MessageThread(object):
 				if currentMessage == person and nextMessage == person:
 					doubleMessage += 1
 
-			print(doubleMessage)
+			# print(doubleMessage)
 			returnDictionary['doubleMessage'].append({'person': person, 'times': doubleMessage})
 
 
@@ -158,10 +164,9 @@ class MessageThread(object):
 		return False
 
 
-
-
 class GroupThread(MessageThread):
 	people = []
 
 	def __init__(self, direct):
 		super(direct)
+

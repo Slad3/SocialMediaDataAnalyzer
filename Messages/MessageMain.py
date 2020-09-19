@@ -20,4 +20,12 @@ class MessageMain(object):
 
 
 	def run(self):
-		pass
+		print(len(self.threads))
+		result = []
+
+		for thread in self.threads:
+			print(thread.participants)
+			if len(thread.participants) == 2:
+				result.append(thread.calc())
+
+		return result

@@ -8,6 +8,8 @@ import zipfile
 from Search.SearchHistory import SearchHistory
 import Search.SearchFrequency as SearchFrequency
 
+from Messages.MessageMain import MessageMain
+
 
 
 
@@ -43,9 +45,10 @@ def upload():
 
 		# Parsing Searches
 		searchHistory = SearchHistory(str(tempDirectory.name + "\search_history\your_search_history.json"))
+		messageMain = MessageMain(tempDirectory.name + 'messages')
 
 		result["SearchHistory"] = searchHistory.run()
-		result['MessageData'] = MessageStructures
+		result['MessageData'] = messageMain.run()
 
 
 
