@@ -19,7 +19,7 @@ class MessageMain(object):
 
 
 
-	def run(self):
+	def run(self) -> dict:
 		print(len(self.threads))
 		result = []
 
@@ -27,5 +27,10 @@ class MessageMain(object):
 			# print(thread.participants)
 			if len(thread.participants) == 2:
 				result.append(thread.calc())
+			else:
+				pass
+
+			# print(result)
+
 
 		return result

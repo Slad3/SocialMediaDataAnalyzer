@@ -44,19 +44,23 @@ class MessageThread(object):
 	directory: str
 	rawMessage: dict
 
-	photos = []
-	videos = []
-	messages = []
+	photos: []
+	videos: []
+	messages: []
 
 	participants: []
 
-	averageResponseTime = {}
+	averageResponseTime: {}
 
 
 	def __init__(self, direct, name=None):
 		self.directory = direct
 
 		self.participants = []
+		self.photos = []
+		self.videos =  []
+		self.messages = []
+		self.averageResponseTime = {}
 
 		with open(self.directory + "\\message_1.json", 'r') as inputFile:
 			self.rawMessage = json.load(inputFile)
@@ -76,7 +80,7 @@ class MessageThread(object):
 	def calc(self) -> []:
 		endCalculations = []
 
-		returnDictionary = {"receiver": self.participants[0], 'averageResponse': [], 'doubleMessage': [], 'initiations': []}
+		returnDictionary = {"to": self.participants[0], 'averageResponse': [], 'doubleMessage': [], 'initiations': []}
 
 		allMessages = np.array([])
 		for iter, message in enumerate(self.messages[:-1]):
@@ -117,8 +121,9 @@ class MessageThread(object):
 			total = replyTimeChart.sum()
 
 			if numberOfMessages > 0:
+				tempDelta = timedelta(seconds= total/numberOfMessages)
 
-				returnDictionary['averageResponse'].append({'person': person, 'response': timedelta(seconds= total/numberOfMessages)})
+				returnDictionary['averageResponse'].append({'person': person, 'response': (total*1000)/numberOfMessages})
 
 
 			#
