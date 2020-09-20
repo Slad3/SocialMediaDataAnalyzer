@@ -24,7 +24,7 @@ class MessageMain(object):
 		result = []
 
 		for thread in self.threads:
-			print(thread.participants)
+			# print(thread.participants)
 			if len(thread.participants) == 2:
 				result.append(thread.calc())
 

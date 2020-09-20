@@ -1,6 +1,5 @@
 import json
 from datetime import datetime, timedelta
-import pandas as pd
 import numpy as np
 
 class Message(object):
@@ -49,21 +48,22 @@ class MessageThread(object):
 	videos = []
 	messages = []
 
-	participants = []
+	participants: []
 
 	averageResponseTime = {}
 
 
 	def __init__(self, direct, name=None):
 		self.directory = direct
-		print(direct)
+
+		self.participants = []
 
 		with open(self.directory + "\\message_1.json", 'r') as inputFile:
 			self.rawMessage = json.load(inputFile)
 
 			for name in self.rawMessage['participants']:
-				self.participants.append(name['name'])
-				print(name)
+				temp = name['name']
+				self.participants.append(temp)
 
 			if self.rawMessage['messages']:
 				for message in self.rawMessage['messages']:
@@ -74,7 +74,6 @@ class MessageThread(object):
 
 
 	def calc(self) -> []:
-		print(self.participants)
 		endCalculations = []
 
 		returnDictionary = {"receiver": self.participants[0], 'averageResponse': [], 'doubleMessage': [], 'initiations': []}
@@ -95,7 +94,7 @@ class MessageThread(object):
 
 			for iter, message in enumerate(self.messages[1:]):
 
-				if message.sender == person and self.messages[iter-1].sender != person and iter is not 0:
+				if message.sender == person and self.messages[iter-1].sender != person and iter != 0:
 					difference = message.timestamp - self.messages[iter-1].timestamp
 					if difference > 0:
 

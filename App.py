@@ -42,7 +42,7 @@ def upload():
 			zipRef.extractall(tempDirectory.name)
 
 		result = {}
-
+ 
 		# Parsing Searches
 		searchHistory = SearchHistory(str(tempDirectory.name + "\search_history\your_search_history.json"))
 		messageMain = MessageMain(tempDirectory.name + 'messages')
