@@ -58,11 +58,6 @@ def bestPeriod(searches: [], search: str, days=365) -> []:
 				min = total
 				bigTotal = total
 
-	print(search)
-	print(bigTotal)
-	print(startDate.date())
-	print(endDate.date())
-	print('\n==================\n')
 	return [str(startDate.date()), str(endDate.date())]
 
 

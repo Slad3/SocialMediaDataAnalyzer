@@ -118,14 +118,6 @@ class MessageThread(object):
 
 			if numberOfMessages > 0:
 
-				# print('\n=======================')
-				# print(person)
-				# print("Total time:\t", total)
-				# print("Total time delta:\t", timedelta(total))
-				# print("Number of messages:\t", numberOfMessages)
-				# print("Average Response:\t", total/numberOfMessages)
-				# print(timedelta(seconds= total/numberOfMessages))
-
 				returnDictionary['averageResponse'].append({'person': person, 'response': timedelta(seconds= total/numberOfMessages)})
 
 
@@ -139,7 +131,6 @@ class MessageThread(object):
 				if currentMessage == person and nextMessage == person:
 					doubleMessage += 1
 
-			# print(doubleMessage)
 			returnDictionary['doubleMessage'].append({'person': person, 'times': doubleMessage})
 
 
