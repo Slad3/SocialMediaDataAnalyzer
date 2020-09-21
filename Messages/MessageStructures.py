@@ -11,7 +11,7 @@ class Message(object):
 
 	def __init__(self, input: dict):
 		self.sender = str(input['sender_name'])
-		self.timestamp = input['timestamp_ms']/1000
+		self.timestamp = input['timestamp_ms']
 		self.time = datetime.fromtimestamp(input['timestamp_ms']/1000)
 
 		# Find kind of content
@@ -94,7 +94,9 @@ class MessageThread(object):
 			# Reply time calculations
 			#
 			replyTimeChart = np.array([])
-			maxTime = 14400
+			# maxTime = 14400
+			longTime = 7200000
+			maxTime = 14400000
 
 			for iter, message in enumerate(self.messages[1:]):
 
@@ -102,11 +104,12 @@ class MessageThread(object):
 					difference = message.timestamp - self.messages[iter-1].timestamp
 					if difference > 0:
 
-						if difference < maxTime:
+						if difference < longTime:
 							replyTimeChart = np.append(replyTimeChart, difference) # adding
 							# replyTimeChart = np.append(replyTimeChart, float(str(difference)[0: 7]))
-						else:
-							replyTimeChart = np.append(replyTimeChart, maxTime) # adding
+						elif difference < maxTime:
+							replyTimeChart = np.append(replyTimeChart, longTime +  difference/2) # adding
+
 
 						# print(person, "\t", message.sender)
 						# print(self.messages[iter-1].sender, '\t', message.sender, '\t', message.content)
@@ -121,11 +124,11 @@ class MessageThread(object):
 			total = replyTimeChart.sum()
 
 			if numberOfMessages > 0:
-				tempDelta = timedelta(seconds= total/numberOfMessages)
+				returnDictionary['averageResponse'].append({'person': person, 'response': total/numberOfMessages})
 
-				returnDictionary['averageResponse'].append({'person': person, 'response': (total*1000)/numberOfMessages})
-
-
+			if total/numberOfMessages:
+				# print(replyTimeChart)
+				pass
 			#
 			# Calculating double messaging
 			#
@@ -144,6 +147,8 @@ class MessageThread(object):
 			# Calcuating who for most and least initiated conversations
 			#
 			initiations = 0
+
+
 
 
 			returnDictionary['initiations'].append({'person': person, 'times': initiations})
