@@ -62,7 +62,7 @@ class MessageThread(object):
 		self.messages = []
 		self.averageResponseTime = {}
 
-		with open(self.directory + "\\message_1.json", 'r') as inputFile:
+		with open(self.directory + "/message_1.json", 'r') as inputFile:
 			self.rawMessage = json.load(inputFile)
 
 			for name in self.rawMessage['participants']:
