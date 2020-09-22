@@ -11,10 +11,10 @@ class MessageMain(object):
 	def __init__(self, directory):
 		self.directory = directory
 
-		inboxDirectory = self.directory + "\\inbox"
+		inboxDirectory = self.directory + "/inbox"
 		print(inboxDirectory)
 		for convo in os.listdir(inboxDirectory):
-			self.threads.append(MessageThread(inboxDirectory + "\\"+ convo))
+			self.threads.append(MessageThread(inboxDirectory + "/"+ convo))
 
 
 
