@@ -8,3 +8,9 @@ main.py
 /static/example.json
 /main.ipynb
 /.vscode/
+__pycache__/
+flaskr/Messages/__pycache__/
+flaskr/Search/__pycache__/
+flaskr/main.ipynb
+flaskr/static/
+tests/

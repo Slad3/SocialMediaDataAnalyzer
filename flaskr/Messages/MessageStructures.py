@@ -77,6 +77,7 @@ class MessageThread(object):
 
 
 
+	## Returns a JSON format of what will be sent to the frontend
 	def calc(self) -> []:
 		endCalculations = []
 
@@ -87,6 +88,9 @@ class MessageThread(object):
 			difference = message.timestamp - self.messages[iter+1].timestamp
 			allMessages = np.append(allMessages, float(str(difference)[0: 7]))
 
+
+		yourTotalAverageResponse = 0
+		theirTotalAverageResponse = 0
 
 		for person in self.participants:
 
@@ -126,9 +130,7 @@ class MessageThread(object):
 			if numberOfMessages > 0:
 				returnDictionary['averageResponse'].append({'person': person, 'response': total/numberOfMessages})
 
-			if total/numberOfMessages:
-				# print(replyTimeChart)
-				pass
+
 			#
 			# Calculating double messaging
 			#
@@ -152,6 +154,18 @@ class MessageThread(object):
 
 
 			returnDictionary['initiations'].append({'person': person, 'times': initiations})
+
+			returnDictionary['averageResponse']['totalResponse'] = [theirTotalAverageResponse, yourTotalAverageResponse]
+
+
+		#
+		# Total Average response times
+		#
+		print(returnDictionary['averageResponse'])
+		for convo in returnDictionary['averageResponse']:
+			print(convo['response'])
+			yourTotalAverageResponse += convo['person'][1]
+
 
 		return returnDictionary
 

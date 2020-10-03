@@ -1,6 +1,6 @@
 import os
 
-from Messages.MessageStructures import MessageThread
+from flaskr.Messages.MessageStructures import MessageThread
 
 class MessageMain(object):
 
@@ -19,8 +19,7 @@ class MessageMain(object):
 
 
 
-	def run(self) -> dict:
-		print(len(self.threads))
+	def run(self):
 		result = []
 
 		for thread in self.threads:
@@ -29,8 +28,5 @@ class MessageMain(object):
 				result.append(thread.calc())
 			else:
 				pass
-
-			# print(result)
-
 
 		return result

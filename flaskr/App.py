@@ -1,14 +1,13 @@
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
+import wheel
 import tempfile
 import json
-import io
 import zipfile
 
-from Search.SearchHistory import SearchHistory
-import Search.SearchFrequency as SearchFrequency
+from flaskr.Search.SearchHistory import SearchHistory
 
-from Messages.MessageMain import MessageMain
+from flaskr.Messages.MessageMain import MessageMain
 
 
 
@@ -61,7 +60,7 @@ def upload():
 
 @app.route('/sample')
 def sample():
-	with open(r'static/example.json', 'r', encoding='utf-8') as file:
+	with open(r'flaskr/static/example.json', 'r', encoding='utf-8') as file:
 		result = json.load(file)
 		return jsonify(result)
 
