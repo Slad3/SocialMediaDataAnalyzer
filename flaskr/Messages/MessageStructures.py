@@ -60,7 +60,7 @@ class MessageThread(object):
 		self.photos = []
 		self.videos =  []
 		self.messages = []
-		self.averageResponseTime = {}
+		self.averageResponseTime = []
 
 		with open(self.directory + "/message_1.json", 'r') as inputFile:
 			self.rawMessage = json.load(inputFile)
@@ -81,7 +81,7 @@ class MessageThread(object):
 	def calc(self) -> []:
 		endCalculations = []
 
-		returnDictionary = {"to": self.participants[0], 'averageResponse': [], 'doubleMessage': [], 'initiations': []}
+		returnDictionary = {"to": self.participants[0], 'averageResponse': {'all': []}, 'doubleMessage': [], 'initiations': []}
 
 		allMessages = np.array([])
 		for iter, message in enumerate(self.messages[:-1]):
@@ -128,7 +128,8 @@ class MessageThread(object):
 			total = replyTimeChart.sum()
 
 			if numberOfMessages > 0:
-				returnDictionary['averageResponse'].append({'person': person, 'response': total/numberOfMessages})
+				self.averageResponseTime.append()
+				returnDictionary['averageResponse']['all'].append({'person': person, 'response': total/numberOfMessages})
 
 
 			#
@@ -155,16 +156,19 @@ class MessageThread(object):
 
 			returnDictionary['initiations'].append({'person': person, 'times': initiations})
 
-			returnDictionary['averageResponse']['totalResponse'] = [theirTotalAverageResponse, yourTotalAverageResponse]
+			print(theirTotalAverageResponse)
+
+			returnDictionary['averageResponse']['totalResponse'] = self.averageResponseTime
 
 
 		#
 		# Total Average response times
 		#
-		print(returnDictionary['averageResponse'])
-		for convo in returnDictionary['averageResponse']:
-			print(convo['response'])
-			yourTotalAverageResponse += convo['person'][1]
+		# print(returnDictionary['averageResponse'])
+		# print(returnDictionary)
+		for convo in returnDictionary['averageResponse']['all']:
+			# print(int(convo['response']))
+			yourTotalAverageResponse += int(convo['response'])
 
 
 		return returnDictionary

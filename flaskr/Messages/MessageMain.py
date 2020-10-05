@@ -14,18 +14,21 @@ class MessageMain(object):
 		inboxDirectory = self.directory + "/inbox"
 		print(inboxDirectory)
 		for convo in os.listdir(inboxDirectory):
-			self.threads.append(MessageThread(inboxDirectory + "/"+ convo))
+			temp = MessageThread(inboxDirectory + "/"+ convo)
+			if len(temp.messages) > 2:
+				self.threads.append(temp)
 
 
 
 
 	def run(self):
-		result = []
+
+		result = {'MessageThreads': []}
 
 		for thread in self.threads:
 			# print(thread.participants)
 			if len(thread.participants) == 2:
-				result.append(thread.calc())
+				result['MessageThreads'].append(thread.calc())
 			else:
 				pass
 

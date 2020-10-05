@@ -1,0 +1,7 @@
+
+
+MessageData:
+    - totalAverageResponseTime: {}
+        - them
+        - you
+    -all: []
