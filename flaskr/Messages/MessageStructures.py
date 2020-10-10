@@ -132,7 +132,7 @@ class MessageThread(object):
 				self.averageResponseTime.append(total/numberOfMessages)
 				# returnDictionary['averageResponse']['all'].append({'person': person, 'response': total/numberOfMessages})
 			else:
-				self.averageResponseTime.append(99999999999)
+				self.averageResponseTime.append(90000000)
 				# print(self.participants[0], '\t', replyTimeChart)
 
 			#
