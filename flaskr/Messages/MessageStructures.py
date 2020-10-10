@@ -53,6 +53,7 @@ class MessageThread(object):
 	participants: []
 	averageResponseTime: []
 	doubleMessaging: []
+	initiations: []
 
 
 	def __init__(self, direct, name=None):
@@ -64,6 +65,8 @@ class MessageThread(object):
 		self.messages = []
 		self.averageResponseTime = []
 		self.doubleMessaging = []
+		self.initiations = []
+
 
 		with open(self.directory + "/message_1.json", 'r') as inputFile:
 			self.rawMessage = json.load(inputFile)
@@ -82,9 +85,8 @@ class MessageThread(object):
 
 	## Returns a JSON format of what will be sent to the frontend
 	def calc(self) -> {}:
-		endCalculations = []
-
 		returnDictionary = {"to": self.participants[0], 'averageResponse': [], 'doubleMessage': [], 'initiations': []}
+
 
 		allMessages = np.array([])
 		for iter, message in enumerate(self.messages[:-1]):
@@ -117,18 +119,21 @@ class MessageThread(object):
 						# print(self.messages[iter-1].sender, '\t', message.sender, '\t', message.content)
 						# print(self.messages[iter-1].timestamp, "\t\t", message.timestamp, '\t', difference, '\t')
 					else:
+						replyTimeChart = np.append(replyTimeChart, maxTime)
 						# print(iter, "\tnegative\t", message.toString(), "\t", message.content)
 						pass
 
-			endCalculations.append(replyTimeChart)
 
-			numberOfMessages = len(replyTimeChart)
 			total = replyTimeChart.sum()
+			numberOfMessages = len(replyTimeChart)
+
 
 			if numberOfMessages > 0:
 				self.averageResponseTime.append(total/numberOfMessages)
 				# returnDictionary['averageResponse']['all'].append({'person': person, 'response': total/numberOfMessages})
-
+			else:
+				self.averageResponseTime.append(99999999999)
+				# print(self.participants[0], '\t', replyTimeChart)
 
 			#
 			# Calculating double messaging
@@ -150,13 +155,14 @@ class MessageThread(object):
 			#
 			initiations = 0
 
+		if self.averageResponseTime == []:
+			self.averageResponseTime = [9999999,9999999]
+
+		self.initiations = [0, 0]
 
 		returnDictionary['averageResponse'] = self.averageResponseTime
 		returnDictionary['doubleMessage'] = self.doubleMessaging
-		# returnDictionary['initiations'].append({'person': person, 'times': initiations})
-
-
-
+		returnDictionary['initiations'] = self.initiations
 
 
 
@@ -169,6 +175,7 @@ class MessageThread(object):
 		return False
 
 
+
 	def toString(self) -> str:
 		endString = ""
 
@@ -177,6 +184,13 @@ class MessageThread(object):
 
 		return endString
 
+	def toJSON(self) -> {}:
+		returnDictionary = {"to": self.participants[0], 'averageResponse': [], 'doubleMessage': [], 'initiations': []}
+		returnDictionary['averageResponse'] = self.averageResponseTime
+		returnDictionary['doubleMessage'] = self.doubleMessaging
+		returnDictionary['initiations'] = self.initiations
+
+		return returnDictionary
 
 class GroupThread(MessageThread):
 	people = []
