@@ -15,7 +15,7 @@ class MessageMain(object):
 		print(inboxDirectory)
 		for convo in os.listdir(inboxDirectory):
 			temp = MessageThread(inboxDirectory + "/"+ convo)
-			if len(temp.messages) > 2:
+			if len(temp.messages) > 5:
 				self.threads.append(temp)
 
 
@@ -23,7 +23,10 @@ class MessageMain(object):
 
 	def run(self):
 
-		result = {'MessageThreads': []}
+		result = {
+			'MessageThreads': [],
+			'totalAverageResponseTime': [],
+			}
 
 		for thread in self.threads:
 			# print(thread.participants)

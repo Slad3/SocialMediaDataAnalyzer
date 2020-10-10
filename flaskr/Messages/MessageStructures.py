@@ -48,9 +48,11 @@ class MessageThread(object):
 	videos: []
 	messages: []
 
+	# To is first element
+	# You are the second element
 	participants: []
-
-	averageResponseTime: {}
+	averageResponseTime: []
+	doubleMessaging: []
 
 
 	def __init__(self, direct, name=None):
@@ -61,6 +63,7 @@ class MessageThread(object):
 		self.videos =  []
 		self.messages = []
 		self.averageResponseTime = []
+		self.doubleMessaging = []
 
 		with open(self.directory + "/message_1.json", 'r') as inputFile:
 			self.rawMessage = json.load(inputFile)
@@ -78,19 +81,15 @@ class MessageThread(object):
 
 
 	## Returns a JSON format of what will be sent to the frontend
-	def calc(self) -> []:
+	def calc(self) -> {}:
 		endCalculations = []
 
-		returnDictionary = {"to": self.participants[0], 'averageResponse': {'all': []}, 'doubleMessage': [], 'initiations': []}
+		returnDictionary = {"to": self.participants[0], 'averageResponse': [], 'doubleMessage': [], 'initiations': []}
 
 		allMessages = np.array([])
 		for iter, message in enumerate(self.messages[:-1]):
 			difference = message.timestamp - self.messages[iter+1].timestamp
 			allMessages = np.append(allMessages, float(str(difference)[0: 7]))
-
-
-		yourTotalAverageResponse = 0
-		theirTotalAverageResponse = 0
 
 		for person in self.participants:
 
@@ -114,7 +113,6 @@ class MessageThread(object):
 						elif difference < maxTime:
 							replyTimeChart = np.append(replyTimeChart, longTime +  difference/2) # adding
 
-
 						# print(person, "\t", message.sender)
 						# print(self.messages[iter-1].sender, '\t', message.sender, '\t', message.content)
 						# print(self.messages[iter-1].timestamp, "\t\t", message.timestamp, '\t', difference, '\t')
@@ -128,8 +126,8 @@ class MessageThread(object):
 			total = replyTimeChart.sum()
 
 			if numberOfMessages > 0:
-				self.averageResponseTime.append()
-				returnDictionary['averageResponse']['all'].append({'person': person, 'response': total/numberOfMessages})
+				self.averageResponseTime.append(total/numberOfMessages)
+				# returnDictionary['averageResponse']['all'].append({'person': person, 'response': total/numberOfMessages})
 
 
 			#
@@ -142,7 +140,8 @@ class MessageThread(object):
 				if currentMessage == person and nextMessage == person:
 					doubleMessage += 1
 
-			returnDictionary['doubleMessage'].append({'person': person, 'times': doubleMessage})
+			self.doubleMessaging.append(doubleMessage)
+
 
 
 
@@ -152,34 +151,31 @@ class MessageThread(object):
 			initiations = 0
 
 
+		returnDictionary['averageResponse'] = self.averageResponseTime
+		returnDictionary['doubleMessage'] = self.doubleMessaging
+		# returnDictionary['initiations'].append({'person': person, 'times': initiations})
 
 
-			returnDictionary['initiations'].append({'person': person, 'times': initiations})
-
-			print(theirTotalAverageResponse)
-
-			returnDictionary['averageResponse']['totalResponse'] = self.averageResponseTime
 
 
-		#
-		# Total Average response times
-		#
-		# print(returnDictionary['averageResponse'])
-		# print(returnDictionary)
-		for convo in returnDictionary['averageResponse']['all']:
-			# print(int(convo['response']))
-			yourTotalAverageResponse += int(convo['response'])
 
 
 		return returnDictionary
-
-
 
 
 	# Returning true if
 	def filter(self) -> bool:
 		print(self.rawMessage)
 		return False
+
+
+	def toString(self) -> str:
+		endString = ""
+
+		for iter, person in enumerate(self.participants):
+			endString += person + "\t" + str(self.averageResponseTime[iter]) + "\t" + str(self.doubleMessaging[iter]) + "\n"
+
+		return endString
 
 
 class GroupThread(MessageThread):

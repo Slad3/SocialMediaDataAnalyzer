@@ -58,6 +58,7 @@ def upload():
 	else:
 		return "Error: Method not post"
 
+
 @app.route('/sample')
 def sample():
 	with open(r'flaskr/static/example.json', 'r', encoding='utf-8') as file:
