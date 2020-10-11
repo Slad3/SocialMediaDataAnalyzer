@@ -2,6 +2,7 @@ import json
 from datetime import datetime, timedelta
 import numpy as np
 
+
 class Message(object):
 	time: datetime
 	timestamp: int
@@ -33,7 +34,6 @@ class Message(object):
 			self.typeofMessage = 'files'
 		else:
 			self.typeofMessage = 'empty'
-
 
 	def toString(self) -> str:
 		return str(self.time.date()) + "\t" + str(self.time.time())[0: 8] + " \t" + self.sender + "\t" + self.typeofMessage
