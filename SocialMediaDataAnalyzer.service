@@ -1,0 +1,12 @@
+[Unit]
+Description=Social Media Analyzer Server
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory = /root/FacebookDataAnalyzer/
+ExecStart= /usr/bin/sudo /usr/bin/python3 __init__.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

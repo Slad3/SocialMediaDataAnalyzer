@@ -8,7 +8,7 @@ from Search.SearchHistory import SearchHistory
 
 from Messages.MessageMain import MessageMain
 
-
+from waitress import serve
 
 
 app = Flask(__name__)
