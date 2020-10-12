@@ -9,16 +9,8 @@ class MessageMain(object):
 	threads = []
 
 
-	def __init__(self, directory):
-		self.directory = directory
-
-		inboxDirectory = self.directory + "/inbox"
-		print(inboxDirectory)
-		for convo in os.listdir(inboxDirectory):
-			temp = MessageThread(inboxDirectory + "/"+ convo)
-			if len(temp.messages) > 5 and len(temp.participants) == 2:
-				self.threads.append(temp)
-
+	def __init__(self):
+		pass
 
 
 
@@ -63,3 +55,16 @@ class MessageMain(object):
 
 		return result
 
+
+	def fromFacebook(self, directory):
+		self.directory = directory
+
+		inboxDirectory = self.directory + "/inbox"
+		print(inboxDirectory)
+		for convo in os.listdir(inboxDirectory):
+			temp = MessageThread(inboxDirectory + "/"+ convo)
+			if len(temp.messages) > 5 and len(temp.participants) == 2:
+				self.threads.append(temp)
+
+	def fromInstagram(self, inputJson):
+		pass

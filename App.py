@@ -43,7 +43,7 @@ def upload():
  
 		# Parsing Searches
 		searchHistory = SearchHistory(str(tempDirectory.name + "/search_history/your_search_history.json"))
-		messageMain = MessageMain(tempDirectory.name + '/messages')
+		messageMain = MessageMain().fromFacebook(tempDirectory.name + '/messages')
 
 		result["SearchHistory"] = searchHistory.run()
 		result['MessageData'] = messageMain.run()
@@ -60,7 +60,7 @@ def upload():
 
 @app.route('/sample')
 def sample():
-	with open(r'flaskr/static/example.json', 'r', encoding='utf-8') as file:
+	with open(r'static/example.json', 'r', encoding='utf-8') as file:
 		result = json.load(file)
 		return jsonify(result)
 
