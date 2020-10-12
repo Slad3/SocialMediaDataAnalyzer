@@ -1,7 +1,7 @@
 import json
-from flaskr.Search.SearchStructures import SearchResult
-import flaskr.Search.SearchFrequency as Frequency
-import flaskr.Search.SearchDateHistogram as Histogram
+from Search.SearchStructures import SearchResult
+import Search.SearchFrequency as Frequency
+import Search.SearchDateHistogram as Histogram
 
 class SearchHistory(object):
 

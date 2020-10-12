@@ -1,7 +1,7 @@
 import os
 from datetime import timedelta
 
-from flaskr.Messages.MessageStructures import MessageThread
+from Messages.MessageStructures import MessageThread
 
 class MessageMain(object):
 

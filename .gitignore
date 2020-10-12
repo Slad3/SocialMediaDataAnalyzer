@@ -9,8 +9,8 @@ main.py
 /main.ipynb
 /.vscode/
 __pycache__/
-flaskr/Messages/__pycache__/
-flaskr/Search/__pycache__/
-flaskr/main.ipynb
-flaskr/static/
+Messages/__pycache__/
+Search/__pycache__/
+main.ipynb
+static/
 tests/

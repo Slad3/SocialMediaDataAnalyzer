@@ -1,8 +1,6 @@
 import os
 
-from flask import Flask
-
-from flaskr.App import app
+from App import app
 
 
 def create_app(test_config=None):

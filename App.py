@@ -4,9 +4,9 @@ import tempfile
 import json
 import zipfile
 
-from flaskr.Search.SearchHistory import SearchHistory
+from Search.SearchHistory import SearchHistory
 
-from flaskr.Messages.MessageMain import MessageMain
+from Messages.MessageMain import MessageMain
 
 
 
