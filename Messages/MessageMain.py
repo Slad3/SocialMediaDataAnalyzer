@@ -8,11 +8,9 @@ class MessageMain(object):
 	directory: str
 	threads = []
 
+	def __init__(self, threadList: []):
 
-	def __init__(self):
-		pass
-
-
+		self.threads = threadList
 
 	def run(self):
 
@@ -56,15 +54,17 @@ class MessageMain(object):
 		return result
 
 
-	def fromFacebook(self, directory):
-		self.directory = directory
+def fromFacebook(directory):
 
-		inboxDirectory = self.directory + "/inbox"
-		print(inboxDirectory)
-		for convo in os.listdir(inboxDirectory):
-			temp = MessageThread(inboxDirectory + "/"+ convo)
-			if len(temp.messages) > 5 and len(temp.participants) == 2:
-				self.threads.append(temp)
+	inboxDirectory = directory + "/inbox"
+	print(inboxDirectory)
+	threadlist = []
+	for convo in os.listdir(inboxDirectory):
+		temp = MessageThread(inboxDirectory + "/"+ convo)
+		if len(temp.messages) > 5 and len(temp.participants) == 2:
+			threadlist.append(temp)
 
-	def fromInstagram(self, inputJson):
-		pass
+	return MessageMain(threadlist)
+
+def fromInstagram(self, inputJson):
+	pass
