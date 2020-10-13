@@ -3,7 +3,7 @@ from datetime import timedelta
 
 from Messages.MessageStructures import MessageThread
 
-class MessageMain(object):
+class Messages(object):
 
 	directory: str
 	threads = []
@@ -64,7 +64,7 @@ def fromFacebook(directory):
 		if len(temp.messages) > 5 and len(temp.participants) == 2:
 			threadlist.append(temp)
 
-	return MessageMain(threadlist)
+	return Messages(threadlist)
 
 def fromInstagram(self, inputJson):
 	pass
