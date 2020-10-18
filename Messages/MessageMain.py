@@ -16,16 +16,23 @@ class Messages(object):
 
 		result = {
 			'MessageThreads': [],
-			'totalAverageResponseTime': [],
+			'totalAverageResponseTime': {
+				'average': "nope",
+				'individuals': []
+			},
 			}
 
 		amountToShow = 3
 
 
+		total = 0
 		for thread in self.threads:
 			# print(thread.participants)
+			temp = thread.calc()
+			result['MessageThreads'].append(temp)
+			total += thread.averageResponseTime[0]
 
-			result['MessageThreads'].append(thread.calc())
+		result['totalAverageResponseTime']['average'] = str(timedelta(milliseconds=total/len(self.threads)))
 
 
 		# Average Response time for other people
@@ -37,7 +44,7 @@ class Messages(object):
 			                'responseTime': str(timedelta(milliseconds=thing.averageResponseTime[0]))[0:10]
 				            })
 
-		result['totalAverageResponseTime'].append(tempList)
+		result['totalAverageResponseTime']['individuals'].append(tempList)
 
 
 		# Average reponse time for user
@@ -49,22 +56,23 @@ class Messages(object):
 		                    'responseTime': str(timedelta(milliseconds=thing.averageResponseTime[1]))[0:10]
 							})
 
-		result['totalAverageResponseTime'].append(tempList)
+		result['totalAverageResponseTime']['individuals'].append(tempList)
+
 
 		return result
 
 
-def fromFacebook(directory):
+	def fromFacebook(directory: str):
 
-	inboxDirectory = directory + "/inbox"
-	print(inboxDirectory)
-	threadlist = []
-	for convo in os.listdir(inboxDirectory):
-		temp = MessageThread(inboxDirectory + "/"+ convo)
-		if len(temp.messages) > 5 and len(temp.participants) == 2:
-			threadlist.append(temp)
+		inboxDirectory = directory + "/inbox"
+		print(inboxDirectory)
+		threadlist = []
+		for convo in os.listdir(inboxDirectory):
+			temp = MessageThread(inboxDirectory + "/"+ convo)
+			if len(temp.messages) > 5 and len(temp.participants) == 2:
+				threadlist.append(temp)
 
-	return Messages(threadlist)
+		return Messages(threadlist)
 
-def fromInstagram(self, inputJson):
-	pass
+	def fromInstagram(inputJson: {}):
+		pass

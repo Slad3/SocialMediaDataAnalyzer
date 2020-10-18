@@ -6,7 +6,7 @@ import zipfile
 
 from Search.SearchHistory import SearchHistory
 
-from Messages.MessageMain import MessageMain
+from Messages.MessageMain import Messages
 
 from waitress import serve
 
@@ -14,19 +14,8 @@ from waitress import serve
 app = Flask(__name__)
 CORS(app)
 
-
-@app.route('/', methods=['GET', 'POST'])
-def index():
-	return render_template('index.html')
-
-@app.route('/test')
-def test():
-	return "Facebook Analyzer up"
-
-
-@app.route('/upload', methods=['POST'])
+@app.route('/', methods=['POST'])
 def upload():
-	print(request.method)
 	if request.method == 'POST':
 
 		if request.files is None and request.files['file']:
@@ -43,7 +32,7 @@ def upload():
  
 		# Parsing Searches
 		searchHistory = SearchHistory(str(tempDirectory.name + "/search_history/your_search_history.json"))
-		messageMain = MessageMain().fromFacebook(tempDirectory.name + '/messages')
+		messageMain = Messages.fromFacebook(tempDirectory.name + '/messages')
 
 		result["SearchHistory"] = searchHistory.run()
 		result['MessageData'] = messageMain.run()
@@ -63,6 +52,11 @@ def sample():
 	with open(r'static/example.json', 'r', encoding='utf-8') as file:
 		result = json.load(file)
 		return jsonify(result)
+
+
+@app.route('/index', methods=['GET', 'POST'])
+def index():
+	return render_template('index.html')
 
 
 if __name__ == '__main__':
