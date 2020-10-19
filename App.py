@@ -18,7 +18,7 @@ CORS(app)
 def upload():
 	if request.method == 'POST':
 
-		if request.files is None and request.files['file']:
+		if request.files is None or request.files['file'] is None:
 			return "Error, file not uploaded"
 
 		file = request.files['file']

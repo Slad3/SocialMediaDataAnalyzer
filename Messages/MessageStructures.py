@@ -42,7 +42,7 @@ class Message(object):
 class MessageThread(object):
 
 	directory: str
-	rawMessage: dict
+	# rawMessage: dict
 
 	photos: []
 	videos: []
@@ -171,7 +171,7 @@ class MessageThread(object):
 
 	# Returning true if
 	def filter(self) -> bool:
-		print(self.rawMessage)
+		# print(self.rawMessage)
 		return False
 
 
