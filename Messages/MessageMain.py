@@ -68,7 +68,7 @@ class Messages(object):
 		print(inboxDirectory)
 		threadlist = []
 		for convo in os.listdir(inboxDirectory):
-			temp = MessageThread(inboxDirectory + "/"+ convo)
+			temp = MessageThread.fromFacebook(inboxDirectory + "/"+ convo)
 			if len(temp.messages) > 5 and len(temp.participants) == 2:
 				threadlist.append(temp)
 

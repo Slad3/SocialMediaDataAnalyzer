@@ -10,30 +10,42 @@ class Message(object):
 	typeofMessage: str
 	content = None
 
-	def __init__(self, input: dict):
-		self.sender = str(input['sender_name'])
-		self.timestamp = input['timestamp_ms']
-		self.time = datetime.fromtimestamp(input['timestamp_ms']/1000)
+	def __init__(self, sender: str, timestamp: int, typeofmessage: str, content):
+		self.sender = sender
+		self.timestamp = timestamp
+		self.typeofMessage = typeofmessage
+
+		self.time = datetime.fromtimestamp(timestamp / 1000)
+
+
+	def facebook(input: {}):
+		sender = str(input['sender_name'])
+		timestamp = input['timestamp_ms']
+
+		typeofMessage = None
 
 		# Find kind of content
+		content: None
 		if 'content' in input:
-			self.typeofMessage = 'text'
-			self.content = input['content']
+			typeofMessage = 'text'
+			content = input['content']
 
 		elif 'photos' in input:
-			self.typeofMessage = 'photos'
+			typeofMessage = 'photos'
 		elif 'sticker' in input:
-			self.typeofMessage = 'sticker'
+			typeofMessage = 'sticker'
 		elif 'gifs' in input:
-			self.typeofMessage = 'gifs'
+			typeofMessage = 'gifs'
 		elif 'videos' in input:
-			self.typeofMessage = 'videos'
+			typeofMessage = 'videos'
 		elif 'audio_files' in input:
-			self.typeofMessage = 'audio'
+			typeofMessage = 'audio'
 		elif 'files' in input:
-			self.typeofMessage = 'files'
+			typeofMessage = 'files'
 		else:
-			self.typeofMessage = 'empty'
+			typeofMessage = 'empty'
+
+		return Message(sender, timestamp, typeofMessage, content)
 
 	def toString(self) -> str:
 		return str(self.time.date()) + "\t" + str(self.time.time())[0: 8] + " \t" + self.sender + "\t" + self.typeofMessage
@@ -56,30 +68,36 @@ class MessageThread(object):
 	initiations: []
 
 
-	def __init__(self, direct, name=None):
-		self.directory = direct
-
+	def __init__(self, messages: [], participants: [] ):
 		self.participants = []
 		self.photos = []
-		self.videos =  []
+		self.videos = []
 		self.messages = []
 		self.averageResponseTime = []
 		self.doubleMessaging = []
 		self.initiations = []
 
 
-		with open(self.directory + "/message_1.json", 'r') as inputFile:
-			self.rawMessage = json.load(inputFile)
+	def fromFacebook(directory: str):
 
-			for name in self.rawMessage['participants']:
+		participants = []
+		messages = []
+
+
+		with open(directory + "/message_1.json", 'r') as inputFile:
+			rawMessage = json.load(inputFile)
+
+			for name in rawMessage['participants']:
 				temp = name['name']
-				self.participants.append(temp)
+				participants.append(temp)
 
-			if self.rawMessage['messages']:
-				for message in self.rawMessage['messages']:
-					self.messages.append(Message(message))
+			if rawMessage['messages']:
+				for message in rawMessage['messages']:
+					messages.append(Message(message))
 
-			self.messages.reverse()
+			messages.reverse()
+
+		return MessageThread(messages, participants)
 
 
 

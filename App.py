@@ -14,7 +14,7 @@ from waitress import serve
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/', methods=['POST'])
+@app.route('/facebook', methods=['POST'])
 def upload():
 	if request.method == 'POST':
 
