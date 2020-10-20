@@ -3,76 +3,70 @@ from datetime import timedelta
 
 from Messages.MessageStructures import MessageThread
 
+
 class Messages(object):
+    threads = []
 
-	directory: str
-	threads = []
+    def __init__(self, threadList: []):
 
-	def __init__(self, threadList: []):
+        self.threads = threadList
 
-		self.threads = threadList
+    def run(self):
 
-	def run(self):
+        result = {
+            'MessageThreads': [],
+            'totalAverageResponseTime': {
+                'average': "nope",
+                'individuals': []
+            },
+        }
 
-		result = {
-			'MessageThreads': [],
-			'totalAverageResponseTime': {
-				'average': "nope",
-				'individuals': []
-			},
-			}
+        amountToShow = 3
 
-		amountToShow = 3
+        total = 0
+        for thread in self.threads:
+            # print(thread.participants)
+            temp = thread.calc()
+            result['MessageThreads'].append(temp)
+            total += thread.averageResponseTime[0]
 
+        result['totalAverageResponseTime']['average'] = str(timedelta(milliseconds=total / len(self.threads)))
 
-		total = 0
-		for thread in self.threads:
-			# print(thread.participants)
-			temp = thread.calc()
-			result['MessageThreads'].append(temp)
-			total += thread.averageResponseTime[0]
+        # Average Response time for other people
+        temp = sorted(self.threads, key=lambda x: x.averageResponseTime[0], reverse=False)[0: amountToShow]
+        tempList = []
+        for thing in temp:
+            tempList.append({
+                'person': thing.participants[0],
+                'responseTime': str(timedelta(milliseconds=thing.averageResponseTime[0]))[0:10]
+            })
 
-		result['totalAverageResponseTime']['average'] = str(timedelta(milliseconds=total/len(self.threads)))
+        result['totalAverageResponseTime']['individuals'].append(tempList)
 
+        # Average reponse time for user
+        temp = sorted(self.threads, key=lambda x: x.averageResponseTime[1], reverse=False)[0: amountToShow]
+        tempList = []
+        for thing in temp:
+            tempList.append({
+                'person': thing.participants[0],
+                'responseTime': str(timedelta(milliseconds=thing.averageResponseTime[1]))[0:10]
+            })
 
-		# Average Response time for other people
-		temp = sorted(self.threads, key=lambda x: x.averageResponseTime[0], reverse=False)[0: amountToShow]
-		tempList = []
-		for thing in temp:
-			tempList.append({
-							'person': thing.participants[0],
-			                'responseTime': str(timedelta(milliseconds=thing.averageResponseTime[0]))[0:10]
-				            })
+        result['totalAverageResponseTime']['individuals'].append(tempList)
 
-		result['totalAverageResponseTime']['individuals'].append(tempList)
+        return result
 
+    def fromFacebook(directory: str):
 
-		# Average reponse time for user
-		temp = sorted(self.threads, key=lambda x: x.averageResponseTime[1], reverse=False)[0: amountToShow]
-		tempList = []
-		for thing in temp:
-			tempList.append({
-							'person': thing.participants[0],
-		                    'responseTime': str(timedelta(milliseconds=thing.averageResponseTime[1]))[0:10]
-							})
+        inboxDirectory = directory + "/inbox"
+        print(inboxDirectory)
+        threadlist = []
+        for convo in os.listdir(inboxDirectory):
+            temp = MessageThread.fromFacebook(inboxDirectory + "/" + convo)
+            if len(temp.messages) > 5 and len(temp.participants) == 2:
+                threadlist.append(temp)
 
-		result['totalAverageResponseTime']['individuals'].append(tempList)
+        return Messages(threadlist)
 
-
-		return result
-
-
-	def fromFacebook(directory: str):
-
-		inboxDirectory = directory + "/inbox"
-		print(inboxDirectory)
-		threadlist = []
-		for convo in os.listdir(inboxDirectory):
-			temp = MessageThread.fromFacebook(inboxDirectory + "/"+ convo)
-			if len(temp.messages) > 5 and len(temp.participants) == 2:
-				threadlist.append(temp)
-
-		return Messages(threadlist)
-
-	def fromInstagram(inputJson: {}):
-		pass
+    def fromInstagram(inputJson: {}):
+        pass
