@@ -10,7 +10,7 @@ class Message(object):
 	typeofMessage: str
 	content = None
 
-	def __init__(self, sender: str, timestamp: int, typeofmessage: str, content):
+	def __init__(self, sender: str, timestamp: int, typeofmessage: str):
 		self.sender = sender
 		self.timestamp = timestamp
 		self.typeofMessage = typeofmessage
@@ -18,7 +18,7 @@ class Message(object):
 		self.time = datetime.fromtimestamp(timestamp / 1000)
 
 
-	def facebook(input: {}):
+	def fromfacebook(input: {}):
 		sender = str(input['sender_name'])
 		timestamp = input['timestamp_ms']
 
@@ -28,7 +28,6 @@ class Message(object):
 		content: None
 		if 'content' in input:
 			typeofMessage = 'text'
-			content = input['content']
 
 		elif 'photos' in input:
 			typeofMessage = 'photos'
@@ -45,7 +44,36 @@ class Message(object):
 		else:
 			typeofMessage = 'empty'
 
-		return Message(sender, timestamp, typeofMessage, content)
+		return Message(sender, timestamp, typeofMessage)
+
+	def fromInstagram(input: {}):
+		# print(input)
+		sender = str(input['sender'])
+		timestamp = datetime.fromisoformat(input['created_at']).timestamp()
+
+		typeofMessage = None
+
+		# Find kind of content
+		content: None
+		if 'content' in input:
+			typeofMessage = 'text'
+
+		elif 'photos' in input:
+			typeofMessage = 'photos'
+		elif 'sticker' in input:
+			typeofMessage = 'sticker'
+		elif 'gifs' in input:
+			typeofMessage = 'gifs'
+		elif 'videos' in input:
+			typeofMessage = 'videos'
+		elif 'audio_files' in input:
+			typeofMessage = 'audio'
+		elif 'files' in input:
+			typeofMessage = 'files'
+		else:
+			typeofMessage = 'empty'
+
+		return Message(sender, timestamp, typeofMessage)
 
 	def toString(self) -> str:
 		return str(self.time.date()) + "\t" + str(self.time.time())[0: 8] + " \t" + self.sender + "\t" + self.typeofMessage
@@ -54,7 +82,6 @@ class Message(object):
 class MessageThread(object):
 
 	directory: str
-	# rawMessage: dict
 
 	photos: []
 	videos: []
@@ -69,13 +96,14 @@ class MessageThread(object):
 
 
 	def __init__(self, messages: [], participants: [] ):
-		self.participants = []
 		self.photos = []
 		self.videos = []
-		self.messages = []
 		self.averageResponseTime = []
 		self.doubleMessaging = []
 		self.initiations = []
+
+		self.messages = messages
+		self.participants = participants
 
 
 	def fromFacebook(directory: str):
@@ -83,21 +111,37 @@ class MessageThread(object):
 		participants = []
 		messages = []
 
-
 		with open(directory + "/message_1.json", 'r') as inputFile:
 			rawMessage = json.load(inputFile)
-
 			for name in rawMessage['participants']:
 				temp = name['name']
 				participants.append(temp)
 
 			if rawMessage['messages']:
 				for message in rawMessage['messages']:
-					messages.append(Message(message))
+					messages.append(Message.fromfacebook(message))
 
 			messages.reverse()
 
 		return MessageThread(messages, participants)
+
+	def fromInstagram(input: {}, user):
+		participants: []
+		messages = []
+
+		participants = input['participants']
+
+		if len(participants) > 1 and participants[1] != user:
+			temp = participants[0]
+			participants[0] = participants[1]
+			participants[1] = temp
+
+		for message in input['conversation']:
+			temp = Message.fromInstagram(message)
+			messages.append(temp)
+
+		return MessageThread(messages, participants)
+
 
 
 
@@ -209,6 +253,7 @@ class MessageThread(object):
 		returnDictionary['initiations'] = self.initiations
 
 		return returnDictionary
+
 
 class GroupThread(MessageThread):
 	people = []

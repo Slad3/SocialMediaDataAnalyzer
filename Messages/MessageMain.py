@@ -1,5 +1,8 @@
 import os
 from datetime import timedelta
+import json
+import numpy as np
+from collections import Counter
 
 from Messages.MessageStructures import MessageThread
 
@@ -30,6 +33,8 @@ class Messages(object):
             result['MessageThreads'].append(temp)
             total += thread.averageResponseTime[0]
 
+        print(len(self.threads))
+
         result['totalAverageResponseTime']['average'] = str(timedelta(milliseconds=total / len(self.threads)))
 
         # Average Response time for other people
@@ -59,14 +64,34 @@ class Messages(object):
     def fromFacebook(directory: str):
 
         inboxDirectory = directory + "/inbox"
-        print(inboxDirectory)
         threadlist = []
         for convo in os.listdir(inboxDirectory):
             temp = MessageThread.fromFacebook(inboxDirectory + "/" + convo)
             if len(temp.messages) > 5 and len(temp.participants) == 2:
                 threadlist.append(temp)
 
+        print('From Facebook\t', len(threadlist))
         return Messages(threadlist)
 
-    def fromInstagram(inputJson: {}):
-        pass
+    def fromInstagram(directory: str):
+
+        threadlist = []
+        with open(directory + "/messages.json", 'r', encoding='utf8') as inputFile:
+            messages = json.load(inputFile)
+
+            # Finding the primary user since instagram is a butt and switches who's who every convo
+            partics = np.array([])
+            for mt in messages:
+                partics = np.append(partics, mt['participants'])
+
+            user = Counter(partics.flatten()).most_common(1)[0][0]
+
+
+            for mt in messages:
+                temp = MessageThread.fromInstagram(mt, user)
+                if len(temp.messages) > 5 and len(temp.participants) == 2:
+                    threadlist.append(temp)
+
+        return Messages(threadlist)
+
+
