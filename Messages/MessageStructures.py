@@ -4,18 +4,16 @@ import numpy as np
 
 
 class Message(object):
-	time: datetime
-	timestamp: int
+	timestamp: float
 	sender: str
 	typeofMessage: str
 	content = None
 
-	def __init__(self, sender: str, timestamp: int, typeofmessage: str):
+	def __init__(self, sender: str, timestamp, typeofmessage: str):
 		self.sender = sender
-		self.timestamp = timestamp
+		self.timestamp = datetime.fromtimestamp(timestamp).timestamp()
 		self.typeofMessage = typeofmessage
 
-		self.time = datetime.fromtimestamp(timestamp / 1000)
 
 
 	def fromfacebook(input: {}):
@@ -44,10 +42,11 @@ class Message(object):
 		else:
 			typeofMessage = 'empty'
 
+		timestamp = datetime.fromtimestamp(timestamp/1000).timestamp()
+
 		return Message(sender, timestamp, typeofMessage)
 
 	def fromInstagram(input: {}):
-		# print(input)
 		sender = str(input['sender'])
 		timestamp = datetime.fromisoformat(input['created_at']).timestamp()
 
@@ -140,6 +139,8 @@ class MessageThread(object):
 			temp = Message.fromInstagram(message)
 			messages.append(temp)
 
+		messages.reverse()
+
 		return MessageThread(messages, participants)
 
 
@@ -162,28 +163,25 @@ class MessageThread(object):
 			#
 			replyTimeChart = np.array([])
 			# maxTime = 14400
-			longTime = 7200000
-			maxTime = 14400000
+			longTime = 60 * 60 * 2
+			maxTime = 60 * 60 * 4
 
 			for iter, message in enumerate(self.messages[1:]):
 
 				if message.sender == person and self.messages[iter-1].sender != person and iter != 0:
 					difference = message.timestamp - self.messages[iter-1].timestamp
-					if difference > 0:
 
-						if difference < longTime:
-							replyTimeChart = np.append(replyTimeChart, difference) # adding
-							# replyTimeChart = np.append(replyTimeChart, float(str(difference)[0: 7]))
-						elif difference < maxTime:
-							replyTimeChart = np.append(replyTimeChart, longTime +  difference/2) # adding
-
-						# print(person, "\t", message.sender)
-						# print(self.messages[iter-1].sender, '\t', message.sender, '\t', message.content)
-						# print(self.messages[iter-1].timestamp, "\t\t", message.timestamp, '\t', difference, '\t')
+					if difference < longTime:
+						replyTimeChart = np.append(replyTimeChart, difference) # adding
+						# replyTimeChart = np.append(replyTimeChart, float(str(difference)[0: 7]))
+					elif difference < maxTime:
+						replyTimeChart = np.append(replyTimeChart, longTime +  difference/2) # adding
 					else:
 						replyTimeChart = np.append(replyTimeChart, maxTime)
-						# print(iter, "\tnegative\t", message.toString(), "\t", message.content)
-						pass
+					# print(person, "\t", message.sender)
+					# print(self.messages[iter-1].sender, '\t', message.sender, '\t', message.content)
+					# print(self.messages[iter-1].timestamp, "\t\t", message.timestamp, '\t', difference, '\t')
+
 
 
 			total = replyTimeChart.sum()
@@ -194,8 +192,9 @@ class MessageThread(object):
 				self.averageResponseTime.append(total/numberOfMessages)
 				# returnDictionary['averageResponse']['all'].append({'person': person, 'response': total/numberOfMessages})
 			else:
-				self.averageResponseTime.append(90000000)
+				# self.averageResponseTime.append(90000000)
 				# print(self.participants[0], '\t', replyTimeChart)
+				pass
 
 			#
 			# Calculating double messaging
@@ -235,7 +234,6 @@ class MessageThread(object):
 	def filter(self) -> bool:
 		# print(self.rawMessage)
 		return False
-
 
 
 	def toString(self) -> str:

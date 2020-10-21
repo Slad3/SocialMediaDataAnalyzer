@@ -15,7 +15,7 @@ app = Flask(__name__)
 CORS(app)
 
 @app.route('/facebook', methods=['POST'])
-def upload():
+def uploadFacebook():
 	if request.method == 'POST':
 
 		if request.files is None or request.files['file'] is None:
@@ -45,6 +45,37 @@ def upload():
 		return jsonify(result)
 	else:
 		return "Error: Method not post"
+
+
+@app.route('/instagram', methods=['POST'])
+def uploadInstagram():
+	if request.method == 'POST':
+
+		if request.files is None or request.files['file'] is None:
+			return "Error, file not uploaded"
+
+		file = request.files['file']
+		print(file.filename)
+		tempDirectory = tempfile.TemporaryDirectory()
+
+		with zipfile.ZipFile(file, 'r') as zipRef:
+			zipRef.extractall(tempDirectory.name)
+
+		result = {}
+
+		# Parsing Searches
+		messageMain = Messages.fromInstagram(tempDirectory.name)
+
+
+		result['MessageData'] = messageMain.run()
+
+		# Returning and finishing up
+		tempDirectory.cleanup()
+		print("Finished")
+		return jsonify(result)
+	else:
+		return "Error: Method not post"
+
 
 
 @app.route('/sample')

@@ -24,18 +24,20 @@ class Messages(object):
             },
         }
 
-        amountToShow = 3
+        amountToShow = 10
 
         total = 0
         for thread in self.threads:
             # print(thread.participants)
             temp = thread.calc()
             result['MessageThreads'].append(temp)
+            print(thread.participants[0], '\t', timedelta(seconds=thread.averageResponseTime[0]))
             total += thread.averageResponseTime[0]
 
-        print(len(self.threads))
 
-        result['totalAverageResponseTime']['average'] = str(timedelta(milliseconds=total / len(self.threads)))
+        print(total / len(self.threads))
+        print(timedelta(seconds=(total / len(self.threads))))
+        result['totalAverageResponseTime']['average'] = str(timedelta(seconds=total / len(self.threads)))
 
         # Average Response time for other people
         temp = sorted(self.threads, key=lambda x: x.averageResponseTime[0], reverse=False)[0: amountToShow]
@@ -43,7 +45,7 @@ class Messages(object):
         for thing in temp:
             tempList.append({
                 'person': thing.participants[0],
-                'responseTime': str(timedelta(milliseconds=thing.averageResponseTime[0]))[0:10]
+                'responseTime': str(timedelta(seconds=thing.averageResponseTime[0]))[0:7]
             })
 
         result['totalAverageResponseTime']['individuals'].append(tempList)
@@ -54,7 +56,7 @@ class Messages(object):
         for thing in temp:
             tempList.append({
                 'person': thing.participants[0],
-                'responseTime': str(timedelta(milliseconds=thing.averageResponseTime[1]))[0:10]
+                'responseTime': str(timedelta(seconds=thing.averageResponseTime[1]))[0:7]
             })
 
         result['totalAverageResponseTime']['individuals'].append(tempList)
