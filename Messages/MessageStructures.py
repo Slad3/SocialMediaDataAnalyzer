@@ -11,6 +11,8 @@ class Message(object):
 
 	def __init__(self, sender: str, timestamp, typeofmessage: str):
 		self.sender = sender
+
+		# Timestamp should be converted to seconds
 		self.timestamp = datetime.fromtimestamp(timestamp).timestamp()
 		self.typeofMessage = typeofmessage
 
