@@ -150,7 +150,12 @@ class MessageThread(object):
 
 	## Returns a JSON format of what will be sent to the frontend
 	def calc(self) -> {}:
-		returnDictionary = {"to": self.participants[0], 'averageResponse': [], 'doubleMessage': [], 'initiations': []}
+		returnDictionary = {
+			"to": self.participants[0],
+			'averageResponse': [],
+			'doubleMessage': [],
+			'initiations': []
+		}
 
 
 		allMessages = np.array([])
@@ -164,7 +169,6 @@ class MessageThread(object):
 			# Reply time calculations
 			#
 			replyTimeChart = np.array([])
-			# maxTime = 14400
 			longTime = 60 * 60 * 2
 			maxTime = 60 * 60 * 4
 
@@ -218,6 +222,12 @@ class MessageThread(object):
 			#
 			initiations = 0
 
+			if len(replyTimeChart) > 2:
+				for iter, message in enumerate(replyTimeChart[:-2]):
+					# Find if message between next message is over max, then if next couple are under long
+					pass
+
+
 		if self.averageResponseTime == []:
 			self.averageResponseTime = [9999999,9999999]
 
@@ -232,7 +242,7 @@ class MessageThread(object):
 		return returnDictionary
 
 
-	# Returning true if
+	# Returning true if the message thread is default or really small
 	def filter(self) -> bool:
 		# print(self.rawMessage)
 		return False

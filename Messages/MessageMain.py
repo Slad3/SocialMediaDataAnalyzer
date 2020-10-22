@@ -22,24 +22,38 @@ class Messages(object):
                 'average': "nope",
                 'individuals': []
             },
+            'doubleMessaging': [],
         }
 
-        amountToShow = 10
+        amountToShow = 5
 
         total = 0
         for thread in self.threads:
             # print(thread.participants)
             temp = thread.calc()
             result['MessageThreads'].append(temp)
-            print(thread.participants[0], '\t', timedelta(seconds=thread.averageResponseTime[0]))
+            # print(thread.participants[0], '\t', timedelta(seconds=thread.averageResponseTime[0]))
             total += thread.averageResponseTime[0]
 
+        #
+        #   Average Response Time
+        #
 
-        print(total / len(self.threads))
-        print(timedelta(seconds=(total / len(self.threads))))
         result['totalAverageResponseTime']['average'] = str(timedelta(seconds=total / len(self.threads)))
 
-        # Average Response time for other people
+
+        # Average response time for user
+        temp = sorted(self.threads, key=lambda x: x.averageResponseTime[1], reverse=False)[0: amountToShow]
+        tempList = []
+        for thing in temp:
+            tempList.append({
+                'person': thing.participants[0],
+                'responseTime': str(timedelta(seconds=thing.averageResponseTime[1]))[0:7]
+            })
+
+        result['totalAverageResponseTime']['individuals'].append(tempList)
+
+        # Average response time for other people
         temp = sorted(self.threads, key=lambda x: x.averageResponseTime[0], reverse=False)[0: amountToShow]
         tempList = []
         for thing in temp:
@@ -50,16 +64,34 @@ class Messages(object):
 
         result['totalAverageResponseTime']['individuals'].append(tempList)
 
-        # Average reponse time for user
-        temp = sorted(self.threads, key=lambda x: x.averageResponseTime[1], reverse=False)[0: amountToShow]
+
+
+
+        #
+        #   Total Double Messaging
+        #
+
+        # User double messaging
+        temp = sorted(self.threads, key=lambda x: x.doubleMessaging[1], reverse=True)[0: amountToShow]
         tempList = []
         for thing in temp:
             tempList.append({
                 'person': thing.participants[0],
-                'responseTime': str(timedelta(seconds=thing.averageResponseTime[1]))[0:7]
+                'times': thing.doubleMessaging[1]
             })
+        result['doubleMessaging'].append(tempList)
 
-        result['totalAverageResponseTime']['individuals'].append(tempList)
+        # Other people double messaging
+        temp = sorted(self.threads, key=lambda x: x.doubleMessaging[0], reverse=True)[0: amountToShow]
+        tempList = []
+        for thing in temp:
+            tempList.append({
+                'person': thing.participants[0],
+                'times': thing.doubleMessaging[0]
+            })
+        result['doubleMessaging'].append(tempList)
+
+
 
         return result
 

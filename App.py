@@ -5,8 +5,9 @@ import json
 import zipfile
 
 from Search.SearchHistory import SearchHistory
-
 from Messages.MessageMain import Messages
+
+from Instagram import LoggedInDevices
 
 from waitress import serve
 
@@ -65,9 +66,10 @@ def uploadInstagram():
 
 		# Parsing Searches
 		messageMain = Messages.fromInstagram(tempDirectory.name)
-
-
 		result['MessageData'] = messageMain.run()
+
+		result['AccountHistory'] = LoggedInDevices.run(tempDirectory.name)
+
 
 		# Returning and finishing up
 		tempDirectory.cleanup()
