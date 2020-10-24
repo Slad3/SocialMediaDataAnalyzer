@@ -4,13 +4,10 @@ import tempfile
 import json
 import zipfile
 
-from Search.SearchHistory import SearchHistory
+from Facebook.Search.SearchHistory import SearchHistory
 from Messages.MessageMain import Messages
 
 from Instagram import LoggedInDevices
-
-from waitress import serve
-
 
 app = Flask(__name__)
 CORS(app)
@@ -77,7 +74,6 @@ def uploadInstagram():
 		return jsonify(result)
 	else:
 		return "Error: Method not post"
-
 
 
 @app.route('/sample')
