@@ -82,6 +82,9 @@ class Message(object):
 
 class MessageThread(object):
 
+	longTime = 60 * 60 * 2
+	maxTime = 60 * 60 * 4
+
 	directory: str
 
 	photos: []
@@ -95,6 +98,7 @@ class MessageThread(object):
 	doubleMessaging: []
 	initiations: []
 
+	dayHistogram: []
 
 	def __init__(self, messages: [], participants: [] ):
 		self.photos = []
@@ -165,46 +169,78 @@ class MessageThread(object):
 
 		for person in self.participants:
 
-			#
-			# Reply time calculations
-			#
-			replyTimeChart = np.array([])
-			longTime = 60 * 60 * 2
-			maxTime = 60 * 60 * 4
-
-			for iter, message in enumerate(self.messages[1:]):
-
-				if message.sender == person and self.messages[iter-1].sender != person and iter != 0:
-					difference = message.timestamp - self.messages[iter-1].timestamp
-
-					if difference < longTime:
-						replyTimeChart = np.append(replyTimeChart, difference) # adding
-						# replyTimeChart = np.append(replyTimeChart, float(str(difference)[0: 7]))
-					elif difference < maxTime:
-						replyTimeChart = np.append(replyTimeChart, longTime +  difference/2) # adding
-					else:
-						replyTimeChart = np.append(replyTimeChart, maxTime)
-					# print(person, "\t", message.sender)
-					# print(self.messages[iter-1].sender, '\t', message.sender, '\t', message.content)
-					# print(self.messages[iter-1].timestamp, "\t\t", message.timestamp, '\t', difference, '\t')
-
-
+			replyTimeChart = self.replyTimeChartCalc(person=person)
 
 			total = replyTimeChart.sum()
 			numberOfMessages = len(replyTimeChart)
 
-
 			if numberOfMessages > 0:
 				self.averageResponseTime.append(total/numberOfMessages)
-				# returnDictionary['averageResponse']['all'].append({'person': person, 'response': total/numberOfMessages})
 			else:
 				# self.averageResponseTime.append(90000000)
-				# print(self.participants[0], '\t', replyTimeChart)
 				pass
 
+
+
 			#
-			# Calculating double messaging
-			#
+			# Initiations
+			self.initiations.append(self.conversationInitiations(person=person))
+
+
+
+
+
+		#
+		# Double messaging
+		self.doubleMessaging = self.doubleMessagingCalc()
+
+		#
+		#
+		self.dayHistogram = self.dayHistogram(self.messages)
+
+
+		if self.averageResponseTime == []:
+			self.averageResponseTime = [9999999, 9999999]
+
+		self.initiations = [0, 0]
+
+
+
+
+
+		return self.toJSON()
+
+
+	def replyTimeChartCalc(self, person) -> np.ndarray:
+
+		# Reply time calculations
+		#
+		replyTimeChart = np.array([])
+
+
+		for iter, message in enumerate(self.messages[1:]):
+
+			if message.sender == person and self.messages[iter-1].sender != person and iter != 0:
+				difference = message.timestamp - self.messages[iter-1].timestamp
+
+				if difference < self.longTime:
+					replyTimeChart = np.append(replyTimeChart, difference) # adding
+				# replyTimeChart = np.append(replyTimeChart, float(str(difference)[0: 7]))
+				elif difference < self.maxTime:
+					replyTimeChart = np.append(replyTimeChart, self.longTime +  difference/2) # adding
+				else:
+					replyTimeChart = np.append(replyTimeChart, self.maxTime)
+			# print(person, "\t", message.sender)
+			# print(self.messages[iter-1].sender, '\t', message.sender, '\t', message.content)
+			# print(self.messages[iter-1].timestamp, "\t\t", message.timestamp, '\t', difference, '\t')
+
+		return replyTimeChart
+
+	def doubleMessagingCalc(self) -> []:
+
+		doubleMessages = []
+
+		for person in self.participants:
 			doubleMessage = 0
 			for iter, message in enumerate(self.messages[: -1]):
 				currentMessage = self.messages[iter].sender
@@ -212,34 +248,43 @@ class MessageThread(object):
 				if currentMessage == person and nextMessage == person:
 					doubleMessage += 1
 
-			self.doubleMessaging.append(doubleMessage)
+			doubleMessages.append(doubleMessage)
+
+		return doubleMessages
+
+	def conversationInitiations(self, person) -> int:
+		# Calcuating who for most and least initiated conversations
+		#
+		initiations = 0
+
+		return initiations
+
+	def dayHistogram(self, messages: []) -> []:
+		hist = []
+
+		tempTime = timedelta(minutes=0)
+		for i in range(24):
+			if len(str(tempTime)) < 8:
+				hist.append({
+					'time': "0" + str(tempTime),
+					'value': 0
+				})
+			else:
+				hist.append({
+					'time': str(tempTime),
+					'value': 0
+				})
+			tempTime += timedelta(minutes=60)
+
+		for message in messages:
+			time = str(datetime.fromtimestamp(message.timestamp))
+
+			for entry in hist:
+				if time[11: 13] == entry['time'][: 2]:
+					entry['value'] += 1
 
 
-
-
-			#
-			# Calcuating who for most and least initiated conversations
-			#
-			initiations = 0
-
-			if len(replyTimeChart) > 2:
-				for iter, message in enumerate(replyTimeChart[:-2]):
-					# Find if message between next message is over max, then if next couple are under long
-					pass
-
-
-		if self.averageResponseTime == []:
-			self.averageResponseTime = [9999999,9999999]
-
-		self.initiations = [0, 0]
-
-		returnDictionary['averageResponse'] = self.averageResponseTime
-		returnDictionary['doubleMessage'] = self.doubleMessaging
-		returnDictionary['initiations'] = self.initiations
-
-
-
-		return returnDictionary
+		return hist
 
 
 	# Returning true if the message thread is default or really small
@@ -261,6 +306,7 @@ class MessageThread(object):
 		returnDictionary['averageResponse'] = self.averageResponseTime
 		returnDictionary['doubleMessage'] = self.doubleMessaging
 		returnDictionary['initiations'] = self.initiations
+		returnDictionary['dayHistogram'] = self.dayHistogram
 
 		return returnDictionary
 
