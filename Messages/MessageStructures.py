@@ -177,36 +177,18 @@ class MessageThread(object):
 			if numberOfMessages > 0:
 				self.averageResponseTime.append(total/numberOfMessages)
 			else:
-				# self.averageResponseTime.append(90000000)
 				pass
-
-
-
 			#
 			# Initiations
 			self.initiations.append(self.conversationInitiations(person=person))
 
-
-
-
-
-		#
-		# Double messaging
 		self.doubleMessaging = self.doubleMessagingCalc()
-
-		#
-		#
 		self.dayHistogram = self.dayHistogram(self.messages)
-
 
 		if self.averageResponseTime == []:
 			self.averageResponseTime = [9999999, 9999999]
 
 		self.initiations = [0, 0]
-
-
-
-
 
 		return self.toJSON()
 
@@ -302,11 +284,14 @@ class MessageThread(object):
 		return endString
 
 	def toJSON(self) -> {}:
-		returnDictionary = {"to": self.participants[0], 'averageResponse': [], 'doubleMessage': [], 'initiations': []}
-		returnDictionary['averageResponse'] = self.averageResponseTime
-		returnDictionary['doubleMessage'] = self.doubleMessaging
-		returnDictionary['initiations'] = self.initiations
-		returnDictionary['dayHistogram'] = self.dayHistogram
+		returnDictionary = {
+			"to": self.participants[0],
+			'numberOfMessages': len(self.messages),
+			'averageResponse': self.averageResponseTime,
+			'doubleMessage': self.doubleMessaging,
+			'initiations': self.initiations,
+			'dayHistogram': self.dayHistogram,
+		}
 
 		return returnDictionary
 
