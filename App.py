@@ -1,8 +1,10 @@
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
+
 import tempfile
 import json
 import zipfile
+import os
 
 from Facebook.Search.SearchHistory import SearchHistory
 from Messages.MessageMain import Messages
@@ -27,8 +29,7 @@ def uploadFacebook():
 			zipRef.extractall(tempDirectory.name)
 
 		result = {}
- 
-		# Parsing Searches
+
 		searchHistory = SearchHistory(str(tempDirectory.name + "/search_history/your_search_history.json"))
 		messageMain = Messages.fromFacebook(tempDirectory.name + '/messages')
 
@@ -61,7 +62,6 @@ def uploadInstagram():
 
 		result = {}
 
-		# Parsing Searches
 		messageMain = Messages.fromInstagram(tempDirectory.name)
 		result['MessageData'] = messageMain.run()
 
@@ -78,6 +78,7 @@ def uploadInstagram():
 
 @app.route('/sample')
 def sample():
+
 	with open(r'static/example.json', 'r', encoding='utf-8') as file:
 		result = json.load(file)
 		return jsonify(result)
@@ -89,4 +90,5 @@ def index():
 
 
 if __name__ == '__main__':
+	print(os.getcwd())
 	app.run(port=8091, debug=True)

@@ -4,4 +4,4 @@ To Add to message calculations
     - Average messages per day
     - Average messages per day of week
 - Histogram of messages in day
-    - chunks of 20 minutes
+    - chunks of 60 minutes

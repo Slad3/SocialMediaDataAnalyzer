@@ -199,7 +199,6 @@ class MessageThread(object):
 		#
 		replyTimeChart = np.array([])
 
-
 		for iter, message in enumerate(self.messages[1:]):
 
 			if message.sender == person and self.messages[iter-1].sender != person and iter != 0:
@@ -244,6 +243,8 @@ class MessageThread(object):
 	def dayHistogram(self, messages: []) -> []:
 		hist = []
 
+		chunkSize = 24
+
 		tempTime = timedelta(minutes=0)
 		for i in range(24):
 			if len(str(tempTime)) < 8:
@@ -259,12 +260,13 @@ class MessageThread(object):
 			tempTime += timedelta(minutes=60)
 
 		for message in messages:
-			time = str(datetime.fromtimestamp(message.timestamp))
+			time = datetime.fromtimestamp(message.timestamp)
+			# print(time)
+			# print(time.hour, '\t', time.minute)
 
 			for entry in hist:
-				if time[11: 13] == entry['time'][: 2]:
+				if str(time.hour) == entry['time'][: 2]:
 					entry['value'] += 1
-
 
 		return hist
 
