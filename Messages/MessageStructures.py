@@ -33,7 +33,6 @@ class Message(object):
 			typeofMessage = 'picture'
 		elif 'sticker' in input:
 			typeofMessage = 'sticker'
-			print(input)
 		elif 'gifs' in input:
 			typeofMessage = 'gifs'
 		elif 'videos' in input:
@@ -170,7 +169,7 @@ class MessageThread(object):
 		allMessages = np.array([])
 		for iter, message in enumerate(self.messages[:-1]):
 			difference = message.timestamp - self.messages[iter+1].timestamp
-			allMessages = np.append(allMessages, float(str(difference)[0: 7]))
+			allMessages = np.append(allMessages, float(str(difference)[0: 10]))
 
 		for person in self.participants:
 
@@ -180,7 +179,7 @@ class MessageThread(object):
 			numberOfMessages = len(replyTimeChart)
 
 			if numberOfMessages > 0:
-				self.averageResponseTime.append(total/numberOfMessages)
+				self.averageResponseTime.append(float(str(total/numberOfMessages)[:6]))
 			else:
 				pass
 			#
