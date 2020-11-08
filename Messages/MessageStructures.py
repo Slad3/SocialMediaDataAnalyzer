@@ -30,9 +30,10 @@ class Message(object):
 			typeofMessage = 'text'
 
 		elif 'photos' in input:
-			typeofMessage = 'photos'
+			typeofMessage = 'picture'
 		elif 'sticker' in input:
 			typeofMessage = 'sticker'
+			print(input)
 		elif 'gifs' in input:
 			typeofMessage = 'gifs'
 		elif 'videos' in input:
@@ -58,9 +59,8 @@ class Message(object):
 		content: None
 		if 'content' in input:
 			typeofMessage = 'text'
-
 		elif 'photos' in input:
-			typeofMessage = 'photos'
+			typeofMessage = 'picture'
 		elif 'sticker' in input:
 			typeofMessage = 'sticker'
 		elif 'gifs' in input:
@@ -91,6 +91,10 @@ class MessageThread(object):
 	videos: []
 	messages: []
 
+	numberOfPictures = 0
+	numberOfVideos = 0
+	numberOfLinks = 0
+
 	# To is first element
 	# You are the second element
 	participants: []
@@ -98,6 +102,7 @@ class MessageThread(object):
 	doubleMessaging: []
 	initiations: []
 
+	hourHistogram: []
 	dayHistogram: []
 
 	def __init__(self, messages: [], participants: [] ):
@@ -154,13 +159,13 @@ class MessageThread(object):
 
 	## Returns a JSON format of what will be sent to the frontend
 	def calc(self) -> {}:
-		returnDictionary = {
-			"to": self.participants[0],
-			'averageResponse': [],
-			'doubleMessage': [],
-			'initiations': []
-		}
 
+		for message in self.messages:
+			if message.typeofMessage == 'picture' or message.typeofMessage == 'gifs':
+				self.numberOfPictures += 1
+
+			if message.typeofMessage == 'video':
+				self.numberOfVideos += 1
 
 		allMessages = np.array([])
 		for iter, message in enumerate(self.messages[:-1]):
@@ -183,6 +188,7 @@ class MessageThread(object):
 			self.initiations.append(self.conversationInitiations(person=person))
 
 		self.doubleMessaging = self.doubleMessagingCalc()
+		self.hourHistogram = self.hourHistogram(self.messages)
 		self.dayHistogram = self.dayHistogram(self.messages)
 
 		if self.averageResponseTime == []:
@@ -240,7 +246,7 @@ class MessageThread(object):
 
 		return initiations
 
-	def dayHistogram(self, messages: []) -> []:
+	def hourHistogram(self, messages: []) -> []:
 		hist = []
 
 		chunkSize = 24
@@ -268,8 +274,52 @@ class MessageThread(object):
 				if str(time.hour) == entry['time'][: 2]:
 					entry['value'] += 1
 
+		hist = hist[5:] + hist[:5]
+
 		return hist
 
+	def dayHistogram(self, messages: []) -> []:
+
+		hist = [
+			{
+				'day': 'monday',
+				'value': 0
+			},
+			{
+				'day': 'tuesday',
+				'value': 0
+			},
+			{
+				'day': 'wednesday',
+				'value': 0
+			},
+			{
+				'day': 'thursday',
+				'value': 0
+			},
+			{
+				'day': 'friday',
+				'value': 0
+			},
+			{
+				'day': 'saturday',
+				'value': 0
+			},
+			{
+				'day': 'sunday',
+				'value': 0
+			}
+		]
+
+		for message in messages:
+			time = datetime.fromtimestamp(message.timestamp)
+			# print(time)
+			# print(time.weekday(), '\t', time.day)
+
+			hist[time.weekday()]['value'] += 1
+
+
+		return hist
 
 	# Returning true if the message thread is default or really small
 	def filter(self) -> bool:
@@ -289,10 +339,14 @@ class MessageThread(object):
 		returnDictionary = {
 			"to": self.participants[0],
 			'numberOfMessages': len(self.messages),
+			'numberOfPictures': self.numberOfPictures,
+			'numberOfVideos': self.numberOfVideos,
+			'numberOfLinks': self.numberOfLinks,
 			'averageResponse': self.averageResponseTime,
 			'doubleMessage': self.doubleMessaging,
 			'initiations': self.initiations,
-			'dayHistogram': self.dayHistogram,
+			'hourHistogram': self.hourHistogram,
+			'dayHistogram': self.dayHistogram
 		}
 
 		return returnDictionary
