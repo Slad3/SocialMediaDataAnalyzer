@@ -1,10 +1,11 @@
-# Facebook User Data Analyzer
-Server for analyzing downloadable Facebook user data.
+# Social Media User Data Analyzer
+Server for analyzing downloadable Social Media user data.
 
-You can download your Facebook user data here:
+You can download your Social Media user data here:
  
- https://www.facebook.com/dyi/?referrer=ayi 
+ Facebook: https://www.facebook.com/dyi/?referrer=ayi 
 
+ Instagram: https://www.instagram.com/download/request/
 
 ## Overall Process
  When the user uploads the zip file provided by facebook, the server unzips the file into a temporary directory on the server.
