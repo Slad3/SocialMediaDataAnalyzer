@@ -20,14 +20,14 @@ You can download your Facebook user data here:
 
 ### Messages
    #### ** No or content of the user messages will be collected, analyzed, or stored. That's creepy. Only what type of message (text, photo, video etc.), sender, and time will be analyzed. **
-    Analysis of the messages revolves around the response time of each message.
-     
-    This includes how fast each of you respond, the ability to keep a conversation going, if the relationship between you and the recipiant is one sided, who usually initiates the conversation, etc. This also includes the grouping of messages to find somewhat of conversations. 
+Analysis of the messages revolves around the response time of each message.
+ 
+This includes how fast each of you respond, the ability to keep a conversation going, if the relationship between you and the recipiant is one sided, who usually initiates the conversation, etc. This also includes the grouping of messages to find somewhat of conversations. 
 
-    - Response Times
-    - Amount of double messaging
-    - Most initiations of conversations
-    - Least self initiations conversations
+- Response Times
+- Amount of double messaging
+- Most initiations of conversations
+- Least self initiations conversations
     
     
 ## Technical
