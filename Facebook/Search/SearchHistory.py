@@ -12,13 +12,16 @@ class SearchHistory(object):
 
 	def parse(self, file) -> []:
 		results = []
-		with open(file, 'r') as inputFile:
-			data = json.load(inputFile)
-			searches = data['searches']
-			for search in searches:
-				name = str(search['attachments'][0]['data'][0]['text'])[1: -1]
-				date = search['timestamp']
-				results.append(SearchResult(name, date))
+		try:
+			with open(file, 'r') as inputFile:
+				data = json.load(inputFile)
+				searches = data['searches']
+				for search in searches:
+					name = str(search['attachments'][0]['data'][0]['text'])[1: -1]
+					date = search['timestamp']
+					results.append(SearchResult(name, date))
+		except:
+			return [{"Error": "Could not find searchHistory/your_search_history.json"}]
 		return results
 
 	def run(self) -> dict:
