@@ -88,7 +88,7 @@ class MessageThread(object):
 
 	photos: []
 	videos: []
-	messages: []
+	messages: [Message]
 
 	numberOfPictures = 0
 	numberOfVideos = 0
@@ -104,7 +104,7 @@ class MessageThread(object):
 	hourHistogram: []
 	dayHistogram: []
 
-	def __init__(self, messages: [], participants: [] ):
+	def __init__(self, messages: [Message], participants: [] ):
 		self.photos = []
 		self.videos = []
 		self.averageResponseTime = []
@@ -319,6 +319,33 @@ class MessageThread(object):
 
 
 		return hist
+
+	def messagesPerDay(self, messages: []) -> float:
+		startDate = datetime.fromtimestamp(self.messages[0].timestamp).date()
+		endDate = datetime.fromtimestamp(self.messages[-1].timestamp).date()
+
+		print(startDate)
+		print(endDate)
+
+		result = 0.0
+
+
+
+		tempDate = startDate
+		nextDay = tempDate + timedelta(hours=24)
+		for iter, message in enumerate(self.messages):
+			nextDay = tempDate + timedelta(hours=24)
+			print(nextDay)
+
+
+
+
+
+
+		for person in self.participants:
+			pass
+
+		return result
 
 	# Returning true if the message thread is default or really small
 	def filter(self) -> bool:

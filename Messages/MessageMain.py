@@ -14,7 +14,7 @@ class Messages(object):
 
         self.threads = threadList
 
-    def run(self):
+    def run(self) -> {}:
 
         result = {
             'MessageThreads': [],
@@ -27,19 +27,29 @@ class Messages(object):
 
         amountToShow = 5
 
+        amount = 0
         total = 0
         for thread in self.threads:
             # print(thread.participants)
             temp = thread.calc()
             result['MessageThreads'].append(temp)
-            # print(thread.participants[0], '\t', timedelta(seconds=thread.averageResponseTime[0]))
+            print(thread.participants[0], '\t', timedelta(seconds=thread.averageResponseTime[0]))
             total += thread.averageResponseTime[0]
+            amount += 1
+
+
 
         #
         #   Average Response Time
         #
 
-        result['totalAverageResponseTime']['average'] = str(timedelta(seconds=total / len(self.threads)))
+        print(total)
+        print(timedelta(seconds=total))
+        print(timedelta(seconds=(total / len(self.threads))))
+        print(amount)
+        print(len(self.threads))
+
+        result['totalAverageResponseTime']['average'] = str(timedelta(seconds=(total / len(self.threads))))
 
 
         # Average response time for user
