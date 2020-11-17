@@ -25,17 +25,23 @@ def uploadFacebook():
 		print(file.filename)
 		tempDirectory = tempfile.TemporaryDirectory()
 
-		with zipfile.ZipFile(file, 'r') as zipRef:
-			zipRef.extractall(tempDirectory.name)
+		try:
+			with zipfile.ZipFile(file, 'r') as zipRef:
+				zipRef.extractall(tempDirectory.name)
 
-		result = {}
+			result = {}
 
-		searchHistory = SearchHistory(str(tempDirectory.name + "/search_history/your_search_history.json"))
-		messageMain = Messages.fromFacebook(tempDirectory.name + '/messages')
+			searchHistory = SearchHistory(str(tempDirectory.name + "/search_history/your_search_history.json"))
+			messageMain = Messages.fromFacebook(tempDirectory.name + '/messages')
 
-		result["SearchHistory"] = searchHistory.run()
-		result['MessageData'] = messageMain.run()
-
+			result["SearchHistory"] = searchHistory.run()
+			result['MessageData'] = messageMain.run()
+		except Exception as e:
+			print(type(e))
+			if type(e) is zipfile.BadZipFile:
+				return jsonify({"Error": "Bad Upload"})
+			else:
+				return jsonify({"Error": str(e)})
 
 
 		# Returning and finishing up
@@ -84,11 +90,16 @@ def sample():
 		return jsonify(result)
 
 
+# Route that displays simple post forms for directly testing the backend or obtaining direct JSON data
+#
 @app.route('/index', methods=['GET', 'POST'])
 def index():
 	return render_template('index.html')
 
 
+# Main and debugging only gets ran while direct testing.
+# For deploying on server, the __init__.py file is ran where this server is ran through waitress
+#
 if __name__ == '__main__':
 	print(os.getcwd())
 	app.run(port=8091, debug=True)
