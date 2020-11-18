@@ -96,6 +96,9 @@ def sample():
 def index():
 	return render_template('index.html')
 
+@app.route('/')
+def indexCheck():
+	return "Social Media analyzer up"
 
 # Main and debugging only gets ran while direct testing.
 # For deploying on server, the __init__.py file is ran where this server is ran through waitress
