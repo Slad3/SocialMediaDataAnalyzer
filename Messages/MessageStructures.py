@@ -181,6 +181,9 @@ class MessageThread(object):
 			if numberOfMessages > 0:
 				self.averageResponseTime.append(float(str(total/numberOfMessages)[:6]))
 			else:
+				# print("here", person, '\t', numberOfMessages)
+				self.averageResponseTime.append(-1)
+
 				pass
 			#
 			# Initiations
@@ -324,8 +327,8 @@ class MessageThread(object):
 		startDate = datetime.fromtimestamp(self.messages[0].timestamp).date()
 		endDate = datetime.fromtimestamp(self.messages[-1].timestamp).date()
 
-		print(startDate)
-		print(endDate)
+		# print(startDate)
+		# print(endDate)
 
 		result = 0.0
 
@@ -335,7 +338,7 @@ class MessageThread(object):
 		nextDay = tempDate + timedelta(hours=24)
 		for iter, message in enumerate(self.messages):
 			nextDay = tempDate + timedelta(hours=24)
-			print(nextDay)
+			# print(nextDay)
 
 
 
@@ -352,6 +355,19 @@ class MessageThread(object):
 		# print(self.rawMessage)
 		return False
 
+	def getDoubleMessaging(self, index: int):
+		result = self.doubleMessaging[index]
+		if result != -1:
+			return result
+		else:
+			return 999999999
+
+	def getAverageResponseTime(self, index: int):
+		result = self.averageResponseTime[index]
+		if result != -1:
+			return result
+		else:
+			return 999999999
 
 	def toString(self) -> str:
 		endString = ""

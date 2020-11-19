@@ -33,7 +33,7 @@ class Messages(object):
             # print(thread.participants)
             temp = thread.calc()
             result['MessageThreads'].append(temp)
-            print(thread.participants[0], '\t', timedelta(seconds=thread.averageResponseTime[0]))
+            # print(thread.participants[0], '\t', timedelta(seconds=thread.averageResponseTime[0]))
             total += thread.averageResponseTime[0]
             amount += 1
 
@@ -43,17 +43,29 @@ class Messages(object):
         #   Average Response Time
         #
 
-        print(total)
-        print(timedelta(seconds=total))
-        print(timedelta(seconds=(total / len(self.threads))))
-        print(amount)
-        print(len(self.threads))
+        # print(total)
+        # print(timedelta(seconds=total))
+        # print(timedelta(seconds=(total / len(self.threads))))
+        # print(amount)
+        # print(len(self.threads))
 
         result['totalAverageResponseTime']['average'] = str(timedelta(seconds=(total / len(self.threads))))
 
 
         # Average response time for user
-        temp = sorted(self.threads, key=lambda x: x.averageResponseTime[1], reverse=False)[0: amountToShow]
+        # print(amountToShow)
+        # print(len(self.threads))
+        # for t in self.threads:
+        #     print('\t', len(t.averageResponseTime))
+        #     try:
+        #         asdf = t.averageResponseTime[1]
+        #         # print("good\t", t.averageResponseTime[1])
+        #     except:
+        #         print("BAD\t", t.participants, '\t', t.averageResponseTime)
+        #
+        # print("break")
+
+        temp = sorted(self.threads, key=lambda x: x.getAverageResponseTime(1), reverse=False)[0: amountToShow]
         tempList = []
         for thing in temp:
             tempList.append({
@@ -64,7 +76,7 @@ class Messages(object):
         result['totalAverageResponseTime']['individuals'].append(tempList)
 
         # Average response time for other people
-        temp = sorted(self.threads, key=lambda x: x.averageResponseTime[0], reverse=False)[0: amountToShow]
+        temp = sorted(self.threads, key=lambda x: x.getAverageResponseTime(0), reverse=False)[0: amountToShow]
         tempList = []
         for thing in temp:
             tempList.append({
@@ -82,7 +94,7 @@ class Messages(object):
         #
 
         # User double messaging
-        temp = sorted(self.threads, key=lambda x: x.doubleMessaging[1], reverse=True)[0: amountToShow]
+        temp = sorted(self.threads, key=lambda x: x.getDoubleMessaging(1), reverse=True)[0: amountToShow]
         tempList = []
         for thing in temp:
             tempList.append({
@@ -92,7 +104,7 @@ class Messages(object):
         result['doubleMessaging'].append(tempList)
 
         # Other people double messaging
-        temp = sorted(self.threads, key=lambda x: x.doubleMessaging[0], reverse=True)[0: amountToShow]
+        temp = sorted(self.threads, key=lambda x: x.getDoubleMessaging(0), reverse=True)[0: amountToShow]
         tempList = []
         for thing in temp:
             tempList.append({
@@ -100,8 +112,6 @@ class Messages(object):
                 'times': thing.doubleMessaging[0]
             })
         result['doubleMessaging'].append(tempList)
-
-
 
         return result
 
@@ -114,7 +124,6 @@ class Messages(object):
             if len(temp.messages) > 5 and len(temp.participants) == 2:
                 threadlist.append(temp)
 
-        print('From Facebook\t', len(threadlist))
         return Messages(threadlist)
 
     def fromInstagram(directory: str):
