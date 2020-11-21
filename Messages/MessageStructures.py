@@ -19,59 +19,59 @@ class Message(object):
 
 
 	def fromfacebook(input: {}):
-		sender = str(input['sender_name'])
-		timestamp = input['timestamp_ms']
+		sender = str(input["sender_name"])
+		timestamp = input["timestamp_ms"]
 
 		typeofMessage = None
 
 		# Find kind of content
 		content: None
-		if 'content' in input:
-			typeofMessage = 'text'
+		if "content" in input:
+			typeofMessage = "text"
 
-		elif 'photos' in input:
-			typeofMessage = 'picture'
-		elif 'sticker' in input:
-			typeofMessage = 'sticker'
-		elif 'gifs' in input:
-			typeofMessage = 'gifs'
-		elif 'videos' in input:
-			typeofMessage = 'videos'
-		elif 'audio_files' in input:
-			typeofMessage = 'audio'
-		elif 'files' in input:
-			typeofMessage = 'files'
+		elif "photos" in input:
+			typeofMessage = "picture"
+		elif "sticker" in input:
+			typeofMessage = "sticker"
+		elif "gifs" in input:
+			typeofMessage = "gifs"
+		elif "videos" in input:
+			typeofMessage = "videos"
+		elif "audio_files" in input:
+			typeofMessage = "audio"
+		elif "files" in input:
+			typeofMessage = "files"
 		else:
-			typeofMessage = 'empty'
+			typeofMessage = "empty"
 
 		timestamp = datetime.fromtimestamp(timestamp/1000).timestamp()
 
 		return Message(sender, timestamp, typeofMessage)
 
 	def fromInstagram(input: {}):
-		sender = str(input['sender'])
-		timestamp = datetime.fromisoformat(input['created_at']).timestamp()
+		sender = str(input["sender"])
+		timestamp = datetime.fromisoformat(input["created_at"]).timestamp()
 
 		typeofMessage = None
 
 		# Find kind of content
 		content: None
-		if 'content' in input:
-			typeofMessage = 'text'
-		elif 'photos' in input:
-			typeofMessage = 'picture'
-		elif 'sticker' in input:
-			typeofMessage = 'sticker'
-		elif 'gifs' in input:
-			typeofMessage = 'gifs'
-		elif 'videos' in input:
-			typeofMessage = 'videos'
-		elif 'audio_files' in input:
-			typeofMessage = 'audio'
-		elif 'files' in input:
-			typeofMessage = 'files'
+		if "content" in input:
+			typeofMessage = "text"
+		elif "photos" in input:
+			typeofMessage = "picture"
+		elif "sticker" in input:
+			typeofMessage = "sticker"
+		elif "gifs" in input:
+			typeofMessage = "gifs"
+		elif "videos" in input:
+			typeofMessage = "videos"
+		elif "audio_files" in input:
+			typeofMessage = "audio"
+		elif "files" in input:
+			typeofMessage = "files"
 		else:
-			typeofMessage = 'empty'
+			typeofMessage = "empty"
 
 		return Message(sender, timestamp, typeofMessage)
 
@@ -120,14 +120,14 @@ class MessageThread(object):
 		participants = []
 		messages = []
 
-		with open(directory + "/message_1.json", 'r') as inputFile:
+		with open(directory + "/message_1.json", "r") as inputFile:
 			rawMessage = json.load(inputFile)
-			for name in rawMessage['participants']:
-				temp = name['name']
+			for name in rawMessage["participants"]:
+				temp = name["name"]
 				participants.append(temp)
 
-			if rawMessage['messages']:
-				for message in rawMessage['messages']:
+			if rawMessage["messages"]:
+				for message in rawMessage["messages"]:
 					messages.append(Message.fromfacebook(message))
 
 			messages.reverse()
@@ -138,14 +138,14 @@ class MessageThread(object):
 		participants: []
 		messages = []
 
-		participants = input['participants']
+		participants = input["participants"]
 
 		if len(participants) > 1 and participants[1] != user:
 			temp = participants[0]
 			participants[0] = participants[1]
 			participants[1] = temp
 
-		for message in input['conversation']:
+		for message in input["conversation"]:
 			temp = Message.fromInstagram(message)
 			messages.append(temp)
 
@@ -160,10 +160,10 @@ class MessageThread(object):
 	def calc(self) -> {}:
 
 		for message in self.messages:
-			if message.typeofMessage == 'picture' or message.typeofMessage == 'gifs':
+			if message.typeofMessage == "picture" or message.typeofMessage == "gifs":
 				self.numberOfPictures += 1
 
-			if message.typeofMessage == 'video':
+			if message.typeofMessage == "video":
 				self.numberOfVideos += 1
 
 		allMessages = np.array([])
@@ -181,7 +181,7 @@ class MessageThread(object):
 			if numberOfMessages > 0:
 				self.averageResponseTime.append(float(str(total/numberOfMessages)[:6]))
 			else:
-				# print("here", person, '\t', numberOfMessages)
+				# print("here", person, "\t", numberOfMessages)
 				self.averageResponseTime.append(-1)
 
 				pass
@@ -220,8 +220,8 @@ class MessageThread(object):
 				else:
 					replyTimeChart = np.append(replyTimeChart, self.maxTime)
 			# print(person, "\t", message.sender)
-			# print(self.messages[iter-1].sender, '\t', message.sender, '\t', message.content)
-			# print(self.messages[iter-1].timestamp, "\t\t", message.timestamp, '\t', difference, '\t')
+			# print(self.messages[iter-1].sender, "\t", message.sender, "\t", message.content)
+			# print(self.messages[iter-1].timestamp, "\t\t", message.timestamp, "\t", difference, "\t")
 
 		return replyTimeChart
 
@@ -257,24 +257,24 @@ class MessageThread(object):
 		for i in range(24):
 			if len(str(tempTime)) < 8:
 				hist.append({
-					'time': "0" + str(tempTime),
-					'value': 0
+					"time": "0" + str(tempTime),
+					"value": 0
 				})
 			else:
 				hist.append({
-					'time': str(tempTime),
-					'value': 0
+					"time": str(tempTime),
+					"value": 0
 				})
 			tempTime += timedelta(minutes=60)
 
 		for message in messages:
 			time = datetime.fromtimestamp(message.timestamp)
 			# print(time)
-			# print(time.hour, '\t', time.minute)
+			# print(time.hour, "\t", time.minute)
 
 			for entry in hist:
-				if str(time.hour) == entry['time'][: 2]:
-					entry['value'] += 1
+				if str(time.hour) == entry["time"][: 2]:
+					entry["value"] += 1
 
 		hist = hist[5:] + hist[:5]
 
@@ -284,41 +284,41 @@ class MessageThread(object):
 
 		hist = [
 			{
-				'day': 'monday',
-				'value': 0
+				"day": "monday",
+				"value": 0
 			},
 			{
-				'day': 'tuesday',
-				'value': 0
+				"day": "tuesday",
+				"value": 0
 			},
 			{
-				'day': 'wednesday',
-				'value': 0
+				"day": "wednesday",
+				"value": 0
 			},
 			{
-				'day': 'thursday',
-				'value': 0
+				"day": "thursday",
+				"value": 0
 			},
 			{
-				'day': 'friday',
-				'value': 0
+				"day": "friday",
+				"value": 0
 			},
 			{
-				'day': 'saturday',
-				'value': 0
+				"day": "saturday",
+				"value": 0
 			},
 			{
-				'day': 'sunday',
-				'value': 0
+				"day": "sunday",
+				"value": 0
 			}
 		]
 
 		for message in messages:
 			time = datetime.fromtimestamp(message.timestamp)
 			# print(time)
-			# print(time.weekday(), '\t', time.day)
+			# print(time.weekday(), "\t", time.day)
 
-			hist[time.weekday()]['value'] += 1
+			hist[time.weekday()]["value"] += 1
 
 
 		return hist
@@ -380,15 +380,15 @@ class MessageThread(object):
 	def toJSON(self) -> {}:
 		returnDictionary = {
 			"to": self.participants[0],
-			'numberOfMessages': len(self.messages),
-			'numberOfPictures': self.numberOfPictures,
-			'numberOfVideos': self.numberOfVideos,
-			'numberOfLinks': self.numberOfLinks,
-			'averageResponse': self.averageResponseTime,
-			'doubleMessage': self.doubleMessaging,
-			'initiations': self.initiations,
-			'hourHistogram': self.hourHistogram,
-			'dayHistogram': self.dayHistogram
+			"numberOfMessages": len(self.messages),
+			"numberOfPictures": self.numberOfPictures,
+			"numberOfVideos": self.numberOfVideos,
+			"numberOfLinks": self.numberOfLinks,
+			"averageResponse": self.averageResponseTime,
+			"doubleMessage": self.doubleMessaging,
+			"initiations": self.initiations,
+			"hourHistogram": self.hourHistogram,
+			"dayHistogram": self.dayHistogram
 		}
 
 		return returnDictionary
