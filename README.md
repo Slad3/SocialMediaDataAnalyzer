@@ -7,6 +7,16 @@ You can download your Social Media user data here:
 
  Instagram: https://www.instagram.com/download/request/
 
+## To run for yourself
+Installing required packages 
+
+    pip install -r requirements.txt
+    
+From here you can either run `App.py` to run the server in debugging mode, or run `__init__.py` to run in production. Both run on port :8091
+
+
+
+
 ## Overall Process
  When the user uploads the zip file provided by given social media platform, the server unzips the file into a temporary directory on the server.
     

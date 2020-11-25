@@ -1,5 +1,5 @@
 Flask~=1.1.2
-numpy~=1.19.2
-matplotlib~=3.3.2
+numpy~=1.19.3
+matplotlib~=3.3.3
 waitress~=1.4.4
 DateTime~=4.3
