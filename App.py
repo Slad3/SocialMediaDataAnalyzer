@@ -50,12 +50,15 @@ def uploadFacebook():
 			result = {}
 
 			searchHistory = SearchHistory(str(tempDirectory.name + "/search_history/your_search_history.json"))
-			messageMain = Messages.fromFacebook(tempDirectory.name + '/messages')
+			if len(searchHistory.searches) > 0:
+				result["SearchHistory"] = searchHistory.run()
 
-			result["SearchHistory"] = searchHistory.run()
-			result['MessageData'] = messageMain.run()
+			messageMain = Messages.fromFacebook(tempDirectory.name + '/messages')
+			if len(messageMain.threads) > 0:
+				result['MessageData'] = messageMain.run()
+
+
 		except Exception as e:
-			print(type(e))
 			if type(e) is zipfile.BadZipFile:
 				return jsonify({"Error": "Bad Upload"})
 			else:
@@ -67,7 +70,7 @@ def uploadFacebook():
 		print("Finished")
 		return jsonify(result)
 	else:
-		return "Error: Method not post"
+		return jsonify({"Error": "Method not post"})
 
 
 @app.route('/instagram', methods=['POST'])
@@ -87,17 +90,19 @@ def uploadInstagram():
 		result = {}
 
 		messageMain = Messages.fromInstagram(tempDirectory.name)
-		result['MessageData'] = messageMain.run()
+		if len(messageMain.threads) > 0:
+			result['MessageData'] = messageMain.run()
 
-		result['AccountHistory'] = LoggedInDevices.run(tempDirectory.name)
+		accountHistoryResult = LoggedInDevices.run(tempDirectory.name)
+		if accountHistoryResult != [] and accountHistoryResult is not None:
+			result['AccountHistory'] = accountHistoryResult
 
 
 		# Returning and finishing up
 		tempDirectory.cleanup()
-		print("Finished")
 		return jsonify(result)
 	else:
-		return "Error: Method not post"
+		return jsonify({"Error": "Method not post"})
 
 
 @app.route('/sample')
@@ -107,6 +112,7 @@ def sample():
 		result = json.load(file)
 		return jsonify(result)
 
+	return "No sample result"
 
 # Route that displays simple post forms for directly testing the backend or obtaining direct JSON data
 #

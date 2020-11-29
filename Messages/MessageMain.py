@@ -128,7 +128,10 @@ class Messages(object):
     def fromInstagram(directory: str):
 
         threadlist = []
-        with open(directory + "/messages.json", "r", encoding="utf8") as inputFile:
+
+        try:
+            inputFile = open(directory + "/messages.json", "r", encoding="utf8")
+
             messages = json.load(inputFile)
 
             # Finding the primary user since instagram is a butt and switches who"s who every convo
@@ -143,6 +146,8 @@ class Messages(object):
                 temp = MessageThread.fromInstagram(mt, user)
                 if len(temp.messages) > 5 and len(temp.participants) == 2:
                     threadlist.append(temp)
+        except:
+            print("File not found")
 
         return Messages(threadlist)
 

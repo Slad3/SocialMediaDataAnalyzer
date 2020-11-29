@@ -20,5 +20,4 @@ def run(directory) -> []:
 	except:
 		return []
 
-
 	return output

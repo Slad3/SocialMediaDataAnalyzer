@@ -12,9 +12,7 @@ Installing required packages
 
     pip install -r requirements.txt
     
-From here you can either run `App.py` to run the server in debugging mode, or run `__init__.py` to run in production
-
-
+From here you can either run `App.py` to run the server in debugging mode.
 
 
 ## Overall Process
@@ -24,7 +22,7 @@ From here you can either run `App.py` to run the server in debugging mode, or ru
 
 ## Analysis
 
- The end goal of each analysis is to provide a json format that can be easily readable by a frontend service, whether that's the website frontend or 
+ The end goal of each analysis is to provide a json format that can be easily readable by a frontend service, whether that's the website frontend or anther service designed to analyze user data over a period of time.
 
 ### Searches
   The end result of analyzing the searches will be a JSON format of getting the frequency of each search, and providing a comprehensive histogram of each search.
