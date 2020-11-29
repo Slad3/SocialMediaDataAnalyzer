@@ -9,8 +9,8 @@ main.py
 /main.ipynb
 /.vscode/
 __pycache__/
-Messages/__pycache__/
-Facebook/Search/__pycache__/
+src/Messages/__pycache__/
+src/Facebook/Search/__pycache__/
 main.ipynb
 static/
 tests/

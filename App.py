@@ -20,10 +20,10 @@ import json
 import zipfile
 import os
 
-from Facebook.Search.SearchHistory import SearchHistory
-from Messages.MessageMain import Messages
+from  src.Facebook.Search.SearchHistory import SearchHistory
+from  src.Messages.MessageMain import Messages
 
-from Instagram import LoggedInDevices
+from src.Instagram import LoggedInDevices
 
 app = Flask(__name__)
 CORS(app)

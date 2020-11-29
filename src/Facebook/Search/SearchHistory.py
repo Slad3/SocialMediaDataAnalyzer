@@ -1,7 +1,7 @@
 import json
-from Facebook.Search.SearchStructures import SearchResult
-import Facebook.Search.SearchFrequency as Frequency
-import Facebook.Search.SearchDateHistogram as Histogram
+from  src.Facebook.Search.SearchStructures import  SearchResult
+import src.Facebook.Search.SearchFrequency as Frequency
+import  src.Facebook.Search.SearchDateHistogram as Histogram
 
 class SearchHistory(object):
 

@@ -4,7 +4,7 @@ import json
 import numpy as np
 from collections import Counter
 
-from Messages.MessageStructures import MessageThread
+from src.Messages.MessageStructures import MessageThread
 
 
 class Messages(object):
