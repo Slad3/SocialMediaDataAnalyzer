@@ -84,23 +84,30 @@ def uploadInstagram():
 		print(file.filename)
 		tempDirectory = tempfile.TemporaryDirectory()
 
-		with zipfile.ZipFile(file, 'r') as zipRef:
-			zipRef.extractall(tempDirectory.name)
+		try:
+			with zipfile.ZipFile(file, 'r') as zipRef:
+				zipRef.extractall(tempDirectory.name)
 
-		result = {}
+			result = {}
 
-		messageMain = Messages.fromInstagram(tempDirectory.name)
-		if len(messageMain.threads) > 0:
-			result['MessageData'] = messageMain.run()
+			messageMain = Messages.fromInstagram(tempDirectory.name)
+			if len(messageMain.threads) > 0:
+				result['MessageData'] = messageMain.run()
 
-		accountHistoryResult = LoggedInDevices.run(tempDirectory.name)
-		if accountHistoryResult != [] and accountHistoryResult is not None:
-			result['AccountHistory'] = accountHistoryResult
+			accountHistoryResult = LoggedInDevices.run(tempDirectory.name)
+			if accountHistoryResult != [] and accountHistoryResult is not None:
+				result['AccountHistory'] = accountHistoryResult
 
 
-		# Returning and finishing up
-		tempDirectory.cleanup()
-		return jsonify(result)
+			# Returning and finishing up
+			tempDirectory.cleanup()
+			return jsonify(result)
+		except Exception as e:
+			if type(e) is zipfile.BadZipFile:
+				return jsonify({"Error": "Bad Upload"})
+			else:
+				return jsonify({"Error": str(e)})
+
 	else:
 		return jsonify({"Error": "Method not post"})
 
